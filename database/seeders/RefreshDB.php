@@ -6,15 +6,14 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-class ClearSapDataSeeder extends Seeder
+class RefreshDB extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        //
-           // 1. Disable foreign key constraints
+                // 1. Disable foreign key constraints
         Schema::disableForeignKeyConstraints();
 
         // 2. Truncate (empty) the tables
@@ -22,10 +21,12 @@ class ClearSapDataSeeder extends Seeder
         // but with it disabled, you can clear them in any order.
         DB::table('sap_dumps')->truncate();
         DB::table('sap_uploads')->truncate();
+        DB::table('project_heads')->truncate();
+
 
         // 3. Re-enable foreign key constraints
         Schema::enableForeignKeyConstraints();
 
-        $this->command->info('SAP tables cleared successfully!');
+        $this->command->info('SAP tables cleared successfully!');   
     }
 }

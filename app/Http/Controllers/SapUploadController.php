@@ -130,9 +130,8 @@ class SapUploadController extends Controller
     public function storeBatch(Request $request)
     {
         // 1. Validation
-    
-            $request->validate(['data' => 'required|array', 'as_of_date' => 'required|date', 'financial_year' => 'required']);
-        
+
+        $request->validate(['data' => 'required|array', 'as_of_date' => 'required|date', 'financial_year' => 'required']);
 
         $data = $request->input('data');
         $asOfDate = $request->input('as_of_date');
@@ -154,10 +153,15 @@ class SapUploadController extends Controller
             $now = now();
 
             foreach ($data as $row) {
+                $wbs = trim($row['WBS']);
+
+                // Logic: Extract everything after the last hyphen '-'
+                $headCode = str_contains($wbs, '-') ? last(explode('-', $wbs)) : null;
                 $insertData[] = [
                     'sap_upload_id' => $upload->id, // The ID from the record we just created
                     'adp_no' => trim($row['ADP_NO']),
                     'wbs_element' => trim($row['WBS']),
+                    'head_code' => $headCode,
                     'project_description' => trim($row['Description']),
                     'final_budget' => $row['Final_Budget'] ?? 0,
                     'releases' => $row['Releases'] ?? 0,
