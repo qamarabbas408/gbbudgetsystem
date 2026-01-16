@@ -22,5 +22,8 @@ Route::get('/', function () {
 
 Route::get('/upload', [SapUploadController::class, 'index'])->name('sap.upload');
 Route::post('/upload', [SapUploadController::class, 'store'])->name('sap.store');
+Route::post('/sap/store-batch', [SapUploadController::class, 'storeBatch'])->name('sap.storeBatch');
+// Route::post('/sap/store-batch', [SapUploadController::class, 'storeBatch'])->name('sap.storeBatch2');
+
 
 // Route::get('/@{username}/{slug}', [PostController::class, 'show'])->name('posts.show');

@@ -2,10 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SapDump extends Model
 {
-    use HasFactory;
+   protected $fillable = [
+    'adp_no', 
+    'wbs_element', 
+    'project_description', 
+    'final_budget', 
+    'releases', 
+    'expenditure', 
+    'financial_year', 
+    'as_of_date'
+];
 }

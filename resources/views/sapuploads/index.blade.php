@@ -51,16 +51,11 @@
                             <option value="2024-25" selected>2024-25</option>
                         </select>
                     </div>
-
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Related Sector</label>
-                        <select name="sector"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option>Infrastructure</option>
-                            <option>Education</option>
-                            <option>Healthcare</option>
-                            <option>Tourism</option>
-                        </select>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Report "As Of" Date</label>
+                        <input type="date" id="asOfDate" name="as_of_date" value="{{ date('Y-m-d') }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <p class="text-xs text-gray-400 mt-1">Select the date this data was exported from SAP.</p>
                     </div>
                 </div>
 
@@ -210,12 +205,12 @@
                 <div class="bg-gray-50 px-8 py-4 border-t border-gray-200 flex justify-end space-x-4">
                     <button onclick="closeModal()" class="px-6 py-2 text-gray-700 hover:text-gray-900 font-medium">Cancel
                         & Re-upload</button>
-                    <button onclick="submitFinalData()"
+                    <button type="button" onclick="submitFinalData()"
                         class="px-8 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-lg">Confirm &
                         Save to Database</button>
                 </div>
             </div>
-        </div>
+    </div>
     </div>
 @endsection
 <!-- Data Preview Dump -->
@@ -427,6 +422,68 @@
                     loader.classList.add('hidden');
                 }
             }, 50);
+        }
+
+        async function submitFinalData() {
+            // 1. Get the Metadata from the form
+            const asOfDate = document.getElementById('asOfDate').value;
+            const finYear = document.querySelector('select[name="financial_year"]').value;
+
+            if (!asOfDate) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Please select a Report "As Of" Date'
+                });
+                return;
+            }
+
+            // 2. Show a loading state on the button
+            const confirmBtn = document.querySelector('#previewModal button.bg-blue-600');
+            const originalText = confirmBtn.innerText;
+            confirmBtn.disabled = true;
+            confirmBtn.innerText = 'Saving to Database...';
+
+            try {
+                // 3. Send data via Fetch API
+                const response = await fetch("{{ route('sap.storeBatch') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    },
+                    body: JSON.stringify({
+                        data: globalSapData, // The 4,000+ rows we parsed earlier
+                        as_of_date: asOfDate,
+                        financial_year: finYear
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {  
+                    // 4. Success! Redirect to Dashboard
+                    Toast.fire({
+                        icon: 'success',
+                        title: result.message
+                    });
+                    setTimeout(() => {
+                        window.location.href = "{{ route('dashboard') }}";
+                    }, 1500);
+                } else {
+                    throw new Error(result.message || 'Server Error');
+                }
+
+            } catch (error) {
+                console.error(error);
+                // 5. Handle Errors
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Upload Failed: ' + error.message
+                });
+                confirmBtn.disabled = false;
+                confirmBtn.innerText = originalText;
+            }
         }
     </script>
 @endpush
