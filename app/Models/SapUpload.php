@@ -22,4 +22,11 @@ class SapUpload extends Model
         // Link to the child table using 'sap_upload_id' as the foreign key
         return $this->hasMany(SapDump::class, 'sap_upload_id');
     }
+
+    public static function getActiveSnapshot()
+    {
+        // Return the one marked active, or fall back to the most recent one if none are active
+        return self::where('is_active', true)->first()
+               ?? self::orderBy('report_date', 'desc')->first();
+    }
 }

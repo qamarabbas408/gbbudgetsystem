@@ -84,11 +84,16 @@ class SapUploadController extends Controller
         DB::beginTransaction();
 
         try {
+                // NEW STEP: Set all previous snapshots to inactive
+            \App\Models\SapUpload::where('is_active', true)->update(['is_active' => false]);
+
             // 3. Create the Master Upload Record
             $upload = \App\Models\SapUpload::create([
                 'financial_year' => $financialYear,
                 'report_date' => $asOfDate,
                 'file_name' => 'sap_dump_'.now()->format('Ymd_His').'.xlsx',
+                'is_active' => true, // Mark this new upload as active
+
             ]);
 
             // 4. Prepare Data
