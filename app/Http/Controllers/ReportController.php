@@ -9,29 +9,19 @@ class ReportController extends Controller
 {
     public function adpSummary(Request $request)
     {
-        // Get the latest upload date to show current data by default
-        $latestDate = SapDump::max('as_of_date');
-        
-        $query  = SapDump::query();
+         $latestDate = SapDump::max('as_of_date');
+    
+    // We use 'with' to eagerly load Department and Sector (prevents slow loading)
+    $projects = SapDump::with(['department.sector'])
+        ->select('adp_no', 'financial_year', 'project_description', 'department_id',
+            DB::raw('SUM(final_budget) as total_allocation'),
+            DB::raw('SUM(releases) as total_releases'),
+            DB::raw('SUM(expenditure) as total_expenditure')
+        )
+        ->where('as_of_date', $latestDate)
+        ->groupBy('adp_no', 'financial_year', 'project_description', 'department_id')
+        ->get();
 
-        // Optional: Filter by Financial Year if selected
-        if ($request->has('fy')) {
-            $query->where('financial_year', $request->fy);
-        }
-        
-        // Group by ADP No and Financial Year to get project totals
-        $projects = $query->select(
-                'adp_no',
-                'financial_year',
-                'project_description',
-                DB::raw('SUM(final_budget) as total_allocation'),
-                DB::raw('SUM(releases) as total_releases'),
-                DB::raw('SUM(expenditure) as total_expenditure')
-            )
-            ->where('as_of_date', $latestDate) // Only show the most recent snapshot
-            ->groupBy('adp_no', 'financial_year', 'project_description')
-            ->get();
-
-        return view('reports.adp_summary', compact('projects', 'latestDate'));
+    return view('reports.adp_summary', compact('projects', 'latestDate'));
     }
 }

@@ -31,6 +31,16 @@
             padding: 1.5rem;
             /* Give the controls some room from the edges */
         }
+      
+        input:focus {
+            outline: none;
+            /* removes default browser outline */
+            border: 0.5px solid #4f46e5;
+            /* adds a custom border color (indigo) */
+            box-shadow: 0 0 5px rgba(79, 70, 229, 0.5);
+            /* subtle glow effect */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -61,11 +71,11 @@
     {{-- @if (!request()->routeIs('reports.adpSummary'))
         <x-floating-action-btn />
     @endif --}}
-@hasSection('hide_floating_btn')
-    {{-- Do nothing if this section exists --}}
-@else
-    <x-floating-action-btn />
-@endif
+    @hasSection('hide_floating_btn')
+        {{-- Do nothing if this section exists --}}
+    @else
+        <x-floating-action-btn />
+    @endif
     <!-- Toast Notifications -->
     <x-toast />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

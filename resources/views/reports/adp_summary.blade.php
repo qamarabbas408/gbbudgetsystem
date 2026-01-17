@@ -29,7 +29,7 @@
                 Export PDF
             </button>
             <button
-                class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 flex items-center">
+                class="px-4 py-2 bg-white  border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                         d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
@@ -37,13 +37,26 @@
                 </svg>
                 Export Excel
             </button>
+            <form action="{{ route('mappings.sync') }}" method="POST">
+                @csrf
+                <button
+                    id = 'syncButton'
+                    class="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700 shadow-md flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                    Sync All Rules
+                </button>
+            </form>
         </div>
     </div>
 
-<div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <!-- LOCAL SPINNER OVERLAY -->
-    <div class="overflow-x-auto p-4">
-        <table id="adpReportTable" class="w-full text-sm text-left">
+        <div class="overflow-x-auto p-4">
+            <table id="adpReportTable" class="w-full text-sm text-left">
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
                         <th class="px-6 py-4 font-bold text-gray-700 cursor-pointer hover:bg-gray-100">
@@ -63,6 +76,7 @@
                         <th class="px-6 py-4 font-bold text-gray-700 text-right cursor-pointer hover:bg-gray-100">
                             Expenditure <span class="text-gray-300">↕</span>
                         </th>
+                        <th class="px-6 py-4 font-bold text-gray-700">Sector</th>
                         <th class="px-6 py-4 font-bold text-gray-700 text-center cursor-pointer hover:bg-gray-100">
                             Utilization <span class="text-gray-300">↕</span>
                         </th>
@@ -92,6 +106,18 @@
                                 {{ number_format($project->total_expenditure) }}
                             </td>
                             <td class="px-6 py-4">
+                                @if ($project->department)
+                                    <div class="text-xs font-bold text-blue-600 uppercase">
+                                        {{ $project->department->abbreviation }}</div>
+                                    <div class="text-[10px] text-gray-400 uppercase tracking-tighter">
+                                        {{ $project->department->sector->name }}</div>
+                                @else
+                                    <span
+                                        class="px-2 py-0.5 bg-red-50 text-red-500 text-[10px] font-bold rounded uppercase">Unmapped</span>
+                                @endif
+                            </td>
+
+                            <td class="px-6 py-4">
                                 @php
                                     $percent =
                                         $project->total_releases > 0
@@ -112,6 +138,7 @@
                                     <span class="text-xs font-bold text-gray-600">{{ round($percent, 1) }}%</span>
                                 </div>
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>
@@ -128,7 +155,7 @@
                         <td class="px-6 py-4 text-right text-blue-700 curr-cell"
                             data-raw="{{ $projects->sum('total_expenditure') }}">
                             {{ number_format($projects->sum('total_expenditure')) }}</td>
-                        <td></td>
+                        <td colspan="2"></td>
                     </tr>
                 </tfoot>
             </table>
@@ -137,12 +164,12 @@
 @endsection
 
 @push('scripts')
-
     <script>
         // 1. Global state to remember the selected unit
         let currentDivisor = 1;
 
         $(document).ready(function() {
+            const syncbtn = document.getElementById('syncButton');
 
             const table = $('#adpReportTable').DataTable({
                 "pageLength": 50,
@@ -176,7 +203,6 @@
                     );
                     $('.dataTables_length select').addClass(
                         'mx-2 px-3 py-1.5 border border-gray-300 rounded-lg bg-white outline-none');
-                   
                 }
             });
 

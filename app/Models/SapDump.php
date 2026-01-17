@@ -16,4 +16,9 @@ class SapDump extends Model
     'financial_year', 
     'as_of_date'
 ];
+
+public function department()
+{
+    return $this->belongsTo(Department::class);
+}
 }
