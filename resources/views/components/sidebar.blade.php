@@ -107,6 +107,17 @@
                     <span class="font-medium">Mapping Rules</span>
                 </a>
             </li>
+            {{-- SAP Dump Lists --}}
+<li>
+    <a href="{{ route('sap.list') }}"
+        class="group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('sap.list') ? 'bg-white/10 border-l-4 border-white shadow-lg' : 'hover:bg-white/5' }}">
+        <svg class="w-5 h-5 mr-3 {{ request()->routeIs('sap.list') ? 'text-white' : 'text-blue-300 group-hover:text-white' }} transition-colors"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+        </svg>
+        <span class="font-medium text-sm">SAP Dump History</span>
+    </a>
+</li>
         </ul>
     </nav>
 

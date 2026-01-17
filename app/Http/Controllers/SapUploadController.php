@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\SapUpload; 
+use App\Models\SapDump;
 class SapUploadController extends Controller
 {
     public function index()
@@ -62,71 +63,6 @@ class SapUploadController extends Controller
 
         } catch (\Exception $e) {
             // This will send the actual error message to your Toast
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    public function storeBatchx(Request $request)
-    {
-        try {
-            $data = $request->input('data');
-            $asOfDate = $request->input('as_of_date');
-            $financialYear = $request->input('financial_year');
-
-            DB::beginTransaction();
-
-            // 1. Create the Master Upload Record (The "Batch")
-            // This gives us the ID the database is complaining about
-            $upload = \App\Models\SapUpload::create([
-                'financial_year' => $financialYear,
-                'report_date' => $asOfDate,
-                'file_name' => 'sap_dump_upload.xlsx', // You can pass real name if you want
-            ]);
-
-            // 2. Prepare the rows and link them to the $upload->id
-            $insertData = [];
-            $now = now();
-
-            foreach ($data as $row) {
-                $insertData[] = [
-                    'sap_upload_id' => $upload->id, // <--- THIS FIXES THE ERROR
-                    'adp_no' => trim($row['ADP_NO']),
-                    'wbs_element' => trim($row['WBS']),
-                    'project_description' => trim($row['Description']),
-                    'final_budget' => $row['Final_Budget'],
-                    'releases' => $row['Releases'],
-                    'expenditure' => $row['Expenditure'],
-                    'financial_year' => $financialYear,
-                    'as_of_date' => $asOfDate,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ];
-
-                // Insert in chunks of 500 for better performance
-                if (count($insertData) >= 500) {
-                    \App\Models\SapDump::insert($insertData);
-                    $insertData = [];
-                }
-            }
-
-            // Insert remaining rows
-            if (! empty($insertData)) {
-                \App\Models\SapDump::insert($insertData);
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'status' => 'success',
-                'message' => count($data).' records saved successfully in Batch #'.$upload->id,
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -198,5 +134,51 @@ class SapUploadController extends Controller
                 'message' => 'Processing Error: '.$e->getMessage(),
             ], 500);
         }
+    }
+
+    // 1. List all snapshots
+    public function list()
+    {
+        // withCount('sapDumps') automatically calculates how many projects are in each dump
+        $uploads = SapUpload::withCount('sapDumps')
+            ->orderBy('report_date', 'desc')
+            ->get();
+
+        return view('sapuploads.list', compact('uploads'));
+    }
+
+    // 2. Set a specific snapshot as ACTIVE
+    public function activate($id)
+    {
+        DB::beginTransaction();
+        try {
+            // Step A: Set ALL to inactive
+            SapUpload::where('is_active', true)->update(['is_active' => false]);
+
+            // Step B: Set the selected one to active
+            $upload = SapUpload::findOrFail($id);
+            $upload->is_active = true;
+            $upload->save();
+
+            DB::commit();
+
+            return back()->with('success', "Snapshot #{$id} is now the default for all reports.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', 'Failed to activate snapshot.');
+        }
+    }
+
+    // 3. Delete a snapshot and all its 4,000+ linked project rows
+    public function destroy($id)
+    {
+        $upload = SapUpload::findOrFail($id);
+
+        // Because of the 'cascade' on the migration,
+        // deleting the parent automatically deletes all linked sap_dumps rows.
+        $upload->delete();
+
+        return back()->with('success', 'Snapshot and all associated data deleted successfully.');
     }
 }

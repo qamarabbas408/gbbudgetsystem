@@ -33,4 +33,9 @@ class SapDump extends Model
         // Exclude anything starting with SG
         return $query->where('adp_no', 'like', 'A%')->whereNot('adp_no', 'like', 'AB%');
     }
+
+    public function sapUpload()
+    {
+        return $this->belongsTo(SapUpload::class, 'sap_upload_id');
+    }
 }

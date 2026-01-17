@@ -21,6 +21,10 @@ Route::get('/', function () {
     return view('dashboard');
 })->name('dashboard');
 
+// Route::get('/sap/history', function () {
+//     return view('sapuploads.list');
+// })->name('sap.list');
+
 
 Route::get('/upload', [SapUploadController::class, 'index'])->name('sap.upload');
 Route::post('/upload', [SapUploadController::class, 'store'])->name('sap.store');
@@ -39,3 +43,7 @@ Route::post('/settings/mappings', [DepartmentMappingController::class, 'store'])
 Route::post('/settings/mappings/sync', [DepartmentMappingController::class, 'syncAll'])->name('mappings.sync');
 Route::patch('/settings/mappings/{id}', [DepartmentMappingController::class, 'update'])->name('mappings.update');
 Route::delete('/settings/mappings/{id}', [DepartmentMappingController::class, 'destroy'])->name('mappings.destroy');
+
+Route::get('/sap/history', [SapUploadController::class, 'list'])->name('sap.list');
+Route::post('/sap/history/{id}/activate', [SapUploadController::class, 'activate'])->name('sap.activate');
+Route::delete('/sap/history/{id}', [SapUploadController::class, 'destroy'])->name('sap.destroy');
