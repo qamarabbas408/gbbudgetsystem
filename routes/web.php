@@ -28,6 +28,7 @@ Route::post('/sap/store-batch', [SapUploadController::class, 'storeBatch'])->nam
 // Route::post('/sap/store-batch', [SapUploadController::class, 'storeBatch'])->name('sap.storeBatch2');
 
 Route::get('/reports/adp-summary', [ReportController::class, 'adpSummary'])->name('reports.adpSummary');
+Route::get('/reports/sdg-summary', [ReportController::class, 'sdgSummary'])->name('reports.sdgSummary');
 
 // Route::get('/@{username}/{slug}', [PostController::class, 'show'])->name('posts.show');
 

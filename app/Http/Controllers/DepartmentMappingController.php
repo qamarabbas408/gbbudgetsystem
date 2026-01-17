@@ -36,18 +36,20 @@ class DepartmentMappingController extends Controller
             // 1. Logic: If end_adp is empty, use start_adp (Single Project Mapping)
             $start = $request->start_adp;
             $end = $request->end_adp ?: $start;
-
+            
             // 2. Save the rule
             $mapping = DepartmentMapping::create([
                 'department_id' => $request->department_id,
                 'start_adp' => $start,
                 'end_adp' => $end,
+                'type' => $request->type
             ]);
             SapDump::whereBetween('adp_no', [$start, $end])
                 ->update(['department_id' => $mapping->department_id]);
 
             DB::commit();
- $this->syncAllMappings();
+            $this->syncAllMappings();
+
             return back()->with('success', 'Rule applied! Projects in range '.$mapping->start_adp.' to '.$mapping->end_adp.' have been assigned.');
 
         } catch (\Exception $e) {
@@ -115,29 +117,30 @@ class DepartmentMappingController extends Controller
         return back()->with('success', 'Rule deleted. Associated projects are now unmapped.');
     }
 
-
-
-     /**
+    /**
      * THE BRAIN: This ensures the newest rules always win
      */
     private function syncAllMappings()
     {
         DB::beginTransaction();
         try {
-            // 1. Reset everything to NULL first (Clear the slate)
             SapDump::query()->update(['department_id' => null]);
 
-            // 2. Fetch all rules ordered by ID (Oldest to Newest)
+            // Order by ID so newer rules still overwrite older ones within their type
             $rules = DepartmentMapping::orderBy('id', 'asc')->get();
 
-            // 3. Apply rules in sequence. 
-            // If Rule #1 sets A0001 to "Home", and Rule #2 sets A0001 to "Education",
-            // Rule #2 will overwrite Rule #1 because it runs later in the loop.
             foreach ($rules as $rule) {
-                SapDump::whereBetween('adp_no', [$rule->start_adp, $rule->end_adp])
-                        ->update(['department_id' => $rule->department_id]);
-            }
+                $query = SapDump::whereBetween('adp_no', [$rule->start_adp, $rule->end_adp]);
 
+                // If it's an SDG rule, only target SG projects
+                if ($rule->type === 'SDG') {
+                    $query->isSdg();
+                } else {
+                    $query->notSdg();
+                }
+
+                $query->update(['department_id' => $rule->department_id]);
+            }
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
