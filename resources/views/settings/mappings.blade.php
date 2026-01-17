@@ -46,10 +46,9 @@
                                     class="w-full mt-1 border-gray-300 rounded-lg shadow-sm">
                             </div>
                             <div>
-                                <label class="text-xs font-bold text-gray-400 uppercase">To ADP #</label>
-                                <input type="text" name="end_adp" placeholder="A0008"
-                                    class="w-full mt-1 border-gray-300 rounded-lg shadow-sm">
-                            </div>
+        <label class="text-xs font-bold text-gray-400 uppercase">To ADP # (Optional)</label>
+        <input type="text" name="end_adp" placeholder="Leave empty for single" class="w-full mt-1 border-gray-300 rounded-lg">
+    </div>
                         </div>
                         <button type="submit"
                             class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-all shadow-lg">
@@ -76,15 +75,18 @@
                                         {{ $mapping->department->sector->name }}</div>
                                     <div class="font-medium text-gray-900">{{ $mapping->department->name }}</div>
                                 </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center space-x-2">
-                                        <span
-                                            class="bg-blue-50 text-blue-700 px-3 py-1 rounded font-mono font-bold">{{ $mapping->start_adp }}</span>
-                                        <span class="text-gray-300">→</span>
-                                        <span
-                                            class="bg-blue-50 text-blue-700 px-3 py-1 rounded font-mono font-bold">{{ $mapping->end_adp }}</span>
-                                    </div>
-                                </td>
+                              <td class="px-6 py-4">
+    @if($mapping->start_adp === $mapping->end_adp)
+        <!-- Single Project Display -->
+        <span class="text-xs font-bold text-gray-400 uppercase mr-2">Single:</span>
+        <span class="font-mono bg-green-50 text-green-700 px-2 py-1 rounded font-bold">{{ $mapping->start_adp }}</span>
+    @else
+        <!-- Range Display -->
+        <span class="font-mono bg-blue-50 text-blue-700 px-2 py-1 rounded font-bold">{{ $mapping->start_adp }}</span>
+        <span class="mx-2 text-gray-300">→</span>
+        <span class="font-mono bg-blue-50 text-blue-700 px-2 py-1 rounded font-bold">{{ $mapping->end_adp }}</span>
+    @endif
+</td>
                                 <td class="px-6 py-4 flex space-x-3">
                                     <!-- Edit Button (Triggers JS Modal) -->
                                     <button onclick="openEditModal({{ $mapping->toJson() }})"

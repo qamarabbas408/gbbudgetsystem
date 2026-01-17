@@ -48,6 +48,13 @@ class SapUploadController extends Controller
 
             \App\Models\SapDump::insert($insertData);
 
+            $mappings = \App\Models\DepartmentMapping::orderBy('id', 'asc')->get();
+            foreach ($mappings as $rule) {
+                \App\Models\SapDump::where('sap_upload_id', $upload->id)
+                    ->whereBetween('adp_no', [$rule->start_adp, $rule->end_adp])
+                    ->update(['department_id' => $rule->department_id]);
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => count($data).' records saved!',
