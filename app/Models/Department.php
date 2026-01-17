@@ -13,4 +13,14 @@ class Department extends Model
     {
         return $this->belongsTo(Sector::class);
     }
+
+
+     /**
+     * NEW: Link to Projects (SapDumps)
+     * This allows the report to sum up projects for each department
+     */
+    public function sapDumps()
+    {
+        return $this->hasMany(SapDump::class, 'department_id');
+    }
 }

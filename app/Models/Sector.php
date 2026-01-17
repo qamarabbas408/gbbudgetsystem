@@ -13,4 +13,10 @@ class Sector extends Model
     {
         return $this->hasMany(Department::class);
     }
+
+    public function sapDumps()
+    {
+        // This allows us to get all project rows belonging to this sector
+        return $this->hasManyThrough(SapDump::class, Department::class);
+    }
 }

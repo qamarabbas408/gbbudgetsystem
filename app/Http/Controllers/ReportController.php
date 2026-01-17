@@ -44,4 +44,58 @@ class ReportController extends Controller
 
         return view('reports.sdg_summary', compact('projects', 'latestDate'));
     }
+
+    public function sectorSummary()
+    {
+        $latestDate = \App\Models\SapDump::max('as_of_date');
+
+        // Fetch sectors with calculated sums of their projects
+        $sectors = \App\Models\Sector::withCount(['sapDumps' => function ($q) use ($latestDate) {
+            $q->where('as_of_date', $latestDate);
+        }])
+            ->withSum(['sapDumps' => function ($q) use ($latestDate) {
+                $q->where('as_of_date', $latestDate);
+            }], 'final_budget')
+            ->withSum(['sapDumps' => function ($q) use ($latestDate) {
+                $q->where('as_of_date', $latestDate);
+            }], 'releases')
+            ->withSum(['sapDumps' => function ($q) use ($latestDate) {
+                $q->where('as_of_date', $latestDate);
+            }], 'expenditure')
+            ->get();
+
+        return view('reports.sector_summary', compact('sectors', 'latestDate'));
+    }
+
+   public function sectorDeptAnalysis(Request $request)
+{
+    $latestDate = \App\Models\SapDump::max('as_of_date');
+    $type = $request->get('type', 'all'); // Default to showing everything
+
+    $sectors = \App\Models\Sector::with(['departments' => function($query) use ($latestDate, $type) {
+        $query->withCount(['sapDumps' => function($q) use ($latestDate, $type) {
+            $q->where('as_of_date', $latestDate);
+            // Apply filtering logic
+            if ($type === 'adp') $q->notSdg();
+            if ($type === 'sdg') $q->isSdg();
+        }])
+        ->withSum(['sapDumps' => function($q) use ($latestDate, $type) {
+            $q->where('as_of_date', $latestDate);
+            if ($type === 'adp') $q->notSdg();
+            if ($type === 'sdg') $q->isSdg();
+        }], 'final_budget')
+        ->withSum(['sapDumps' => function($q) use ($latestDate, $type) {
+            $q->where('as_of_date', $latestDate);
+            if ($type === 'adp') $q->notSdg();
+            if ($type === 'sdg') $q->isSdg();
+        }], 'releases')
+        ->withSum(['sapDumps' => function($q) use ($latestDate, $type) {
+            $q->where('as_of_date', $latestDate);
+            if ($type === 'adp') $q->notSdg();
+            if ($type === 'sdg') $q->isSdg();
+        }], 'expenditure');
+    }])->get();
+
+    return view('reports.sector_dept_analysis', compact('sectors', 'latestDate', 'type'));
+}
 }

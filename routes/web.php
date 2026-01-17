@@ -29,7 +29,8 @@ Route::post('/sap/store-batch', [SapUploadController::class, 'storeBatch'])->nam
 
 Route::get('/reports/adp-summary', [ReportController::class, 'adpSummary'])->name('reports.adpSummary');
 Route::get('/reports/sdg-summary', [ReportController::class, 'sdgSummary'])->name('reports.sdgSummary');
-
+Route::get('/reports/sector-summary', [ReportController::class, 'sectorSummary'])->name('reports.sectorSummary');
+Route::get('/reports/sector-dept-analysis', [ReportController::class, 'sectorDeptAnalysis'])->name('reports.sectorDeptAnalysis');
 // Route::get('/@{username}/{slug}', [PostController::class, 'show'])->name('posts.show');
 
 
