@@ -22,7 +22,8 @@ class RefreshDB extends Seeder
         DB::table('sap_dumps')->truncate();
         DB::table('sap_uploads')->truncate();
         DB::table('project_heads')->truncate();
-
+        DB::table('sectors')->truncate();
+        DB::table('departments')->truncate();
 
         // 3. Re-enable foreign key constraints
         Schema::enableForeignKeyConstraints();

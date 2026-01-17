@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SapUploadController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,5 +26,6 @@ Route::post('/upload', [SapUploadController::class, 'store'])->name('sap.store')
 Route::post('/sap/store-batch', [SapUploadController::class, 'storeBatch'])->name('sap.storeBatch');
 // Route::post('/sap/store-batch', [SapUploadController::class, 'storeBatch'])->name('sap.storeBatch2');
 
+Route::get('/reports/adp-summary', [ReportController::class, 'adpSummary'])->name('reports.adpSummary');
 
 // Route::get('/@{username}/{slug}', [PostController::class, 'show'])->name('posts.show');

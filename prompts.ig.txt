@@ -1,0 +1,33 @@
+Lets create tables for these : 
+
+A&LE Sector 
+    Excise and Taxation & Zakat Ushr Deptt. EXT
+    Home and Police HNP
+    Information Department INFO
+    Law Department LAW
+    S&GAD Department S&GAD
+Energy Sector
+    Power Pow
+NRM - Natural Resource and Minerals Sector 
+    Agriculture, Animal Husbandry & Fisheries ALF
+    Forestry, Wild life  & Environment FST
+    Minerals, Mines, Industries & Commerce  MILC
+    Food Department FD
+    Tourism, Culture, Sports, Archaeology & Museums TCSM
+    Water Management & Irrigation WM
+Social Sector
+    Social Welfare, Women Dev. Human & Child Rights and Youth Affairs Department SW
+    Information Technolgy IT
+    Higher Technical and Special School Education HTE
+    School Education EDU
+    Health HLT
+AR&UD Sector
+    P&DD
+    LG&RD
+    GDA
+    SDA
+    CDA
+    Others
+Communication & Works Sector
+    Physical Planning & Housing (PPH)
+    Transport & Communication (T&C)

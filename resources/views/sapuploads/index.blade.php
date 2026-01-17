@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'File Upload - GB PND Budget System')
-
+@section('hide_floating_btn', true)
 @section('content')
+
     <div class="max-w-4xl mx-auto">
         <!-- Upload Area -->
         <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
