@@ -47,3 +47,5 @@ Route::delete('/settings/mappings/{id}', [DepartmentMappingController::class, 'd
 Route::get('/sap/history', [SapUploadController::class, 'list'])->name('sap.list');
 Route::post('/sap/history/{id}/activate', [SapUploadController::class, 'activate'])->name('sap.activate');
 Route::delete('/sap/history/{id}', [SapUploadController::class, 'destroy'])->name('sap.destroy');
+
+Route::get('/reports/export/{format}', [ReportController::class, 'exportSectorDept'])->name('reports.export');
