@@ -14,40 +14,35 @@
             <th></th>
             <th></th>
         </tr>
-        <tr></tr> {{-- Blank separator row --}}
         <tr>
-            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff; border: 1px solid #000000;">Sector / Department</th>
-            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff; border: 1px solid #000000;">Allocation</th>
-            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff; border: 1px solid #000000;">Releases</th>
-            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff; border: 1px solid #000000;">Expenditure</th>
-            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff; border: 1px solid #000000;">Util %</th>
+            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff;">Sector / Department</th>
+            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff;">Allocation
+                ({{ $unit == 1000000 ? 'M' : 'PKR' }})</th>
+            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff;">Releases</th>
+            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff;">Expenditure</th>
+            <th style="font-weight: bold; background-color: #1f2937; color: #ffffff;">Util %</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($sectors as $sector)
-            {{-- SECTOR HEADER ROW (Notice: No Colspan here, we fill the first cell) --}}
-            <tr>
-                <td style="font-weight: bold; background-color: #dbeafe; border: 1px solid #000000;">
-                    {{ str_replace('&', ' and ', $sector->name) }}
-                </td>
-                <td style="background-color: #dbeafe; border: 1px solid #000000;"></td>
-                <td style="background-color: #dbeafe; border: 1px solid #000000;"></td>
-                <td style="background-color: #dbeafe; border: 1px solid #000000;"></td>
-                <td style="background-color: #dbeafe; border: 1px solid #000000;"></td>
+        @foreach ($sectors as $sector)
+            <tr style="background-color: #dbeafe;">
+                <td colspan="5" style="font-weight: bold;">{{ $sector->name }}</td>
             </tr>
-            
-            @foreach($sector->departments as $dept)
+            @foreach ($sector->departments as $dept)
                 @php
-                    $budget = $dept->sap_dumps_sum_final_budget ?? 0;
-                    $rel = $dept->sap_dumps_sum_releases ?? 0;
-                    $exp = $dept->sap_dumps_sum_expenditure ?? 0;
+                    $budget = ($dept->sap_dumps_sum_final_budget ?? 0) / $unit;
+                    $rel = ($dept->sap_dumps_sum_releases ?? 0) / $unit;
+                    $exp = ($dept->sap_dumps_sum_expenditure ?? 0) / $unit;
+                    $util = $rel > 0 ? ($exp / $rel) * 100 : 0;
                 @endphp
                 <tr>
-                    <td style="border: 1px solid #000000;">{{ str_replace('&', ' and ', $dept->name) }}</td>
-                    <td style="border: 1px solid #000000;">{{ (float)$budget }}</td>
-                    <td style="border: 1px solid #000000;">{{ (float)$rel }}</td>
-                    <td style="border: 1px solid #000000;">{{ (float)$exp }}</td>
-                    <td style="border: 1px solid #000000;">{{ $rel > 0 ? round(($exp/$rel)*100, 1) : 0 }}%</td>
+                    {{-- <td>{{ str_replace('&', '&amp;', $dept->name) }}</td> --}}
+                    <td>{{ $dept->name }}</td>
+                    <td>{{ round($budget, 2) }}</td>
+                    <td>{{ round($rel, 2) }}</td>
+                    <td>{{ round($exp, 2) }}</td>
+                    {{-- Outputting as a number without the % symbol for easier Excel sorting/math --}}
+                    <td>{{ round($util, 1) }}</td>
                 </tr>
             @endforeach
         @endforeach

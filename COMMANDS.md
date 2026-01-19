@@ -5,3 +5,6 @@ php artisan db:seed --class=MappingRulesSeeder
  php artisan db:seed  
   php artisan make:controller DepartmentMappingController
   php artisan make:model DepartmentMapping -m
+  php artisan view:clear 
+  php artisan cache:clear
+   php artisan config:clear

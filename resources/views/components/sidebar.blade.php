@@ -32,7 +32,21 @@
                     <span class="font-medium">Dashboard</span>
                 </a>
             </li>
+            {{-- Divider --}}
+            <li class="pt-4 pb-2">
+                <div class="border-t border-blue-700/50"></div>
+            </li>
+            <li class="px-3 pt-2 pb-1">
+                <span class="text-xs font-semibold text-blue-300 uppercase tracking-wider">ADP Formulations</span>
+            </li>
 
+            {{-- Divider --}}
+            <li class="pt-4 pb-2">
+                <div class="border-t border-blue-700/50"></div>
+            </li>
+            <li class="px-3 pt-2 pb-1">
+                <span class="text-xs font-semibold text-blue-300 uppercase tracking-wider">SAP Analysis</span>
+            </li>
             {{-- ADP Report --}}
             <li>
                 <a href="{{ route('reports.adpSummary') }}"
@@ -43,12 +57,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span class="font-medium">ADP Report</span>
+                    <span class="font-medium">ADP Utlizations</span>
                 </a>
             </li>
 
             {{-- SDG Report --}}
-            <l  i>
+            <li>
                 <a href="{{ route('reports.sdgSummary') }}"
                     class="group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('reports.sdgSummary') ? 'bg-white/10 border-l-4 border-white shadow-lg' : 'hover:bg-white/5' }}"
                     aria-current="{{ request()->routeIs('reports.sdgSummary') ? 'page' : 'false' }}">
@@ -57,18 +71,21 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                    <span class="font-medium">SDG Report</span>
+                    <span class="font-medium">SDG Utilizations</span>
                 </a>
             </li>
-             {{-- Sector Wise --}}
+            {{-- Sector Wise --}}
             <li>
                 <a href="{{ route('reports.sectorSummary') }}"
                     class="group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('reports.sectorSummary') ? 'bg-white/10 border-l-4 border-white shadow-lg' : 'hover:bg-white/5' }}">
                     <svg class="w-5 h-5 mr-3 {{ request()->routeIs('reports.sectorSummary') ? 'text-white' : 'text-blue-300 group-hover:text-white' }} transition-colors"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
                     </svg>
-                    <span class="font-medium text-sm">Sector Analysis</span>
+                    <span class="font-medium text-sm">Sector Utilizations</span>
                 </a>
             </li>
 
@@ -78,9 +95,10 @@
                     class="group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('reports.sectorDeptAnalysis') ? 'bg-white/10 border-l-4 border-white shadow-lg' : 'hover:bg-white/5' }}">
                     <svg class="w-5 h-5 mr-3 {{ request()->routeIs('reports.sectorDeptAnalysis') ? 'text-white' : 'text-blue-300 group-hover:text-white' }} transition-colors"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
-                    <span class="font-medium text-sm">Depart Analysis</span>
+                    <span class="font-medium text-sm">S/Depart Utilizations</span>
                 </a>
             </li>
 
@@ -108,16 +126,17 @@
                 </a>
             </li>
             {{-- SAP Dump Lists --}}
-<li>
-    <a href="{{ route('sap.list') }}"
-        class="group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('sap.list') ? 'bg-white/10 border-l-4 border-white shadow-lg' : 'hover:bg-white/5' }}">
-        <svg class="w-5 h-5 mr-3 {{ request()->routeIs('sap.list') ? 'text-white' : 'text-blue-300 group-hover:text-white' }} transition-colors"
-            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-        </svg>
-        <span class="font-medium text-sm">SAP Dump History</span>
-    </a>
-</li>
+            <li>
+                <a href="{{ route('sap.list') }}"
+                    class="group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('sap.list') ? 'bg-white/10 border-l-4 border-white shadow-lg' : 'hover:bg-white/5' }}">
+                    <svg class="w-5 h-5 mr-3 {{ request()->routeIs('sap.list') ? 'text-white' : 'text-blue-300 group-hover:text-white' }} transition-colors"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                    <span class="font-medium text-sm">SAP Dump History</span>
+                </a>
+            </li>
         </ul>
     </nav>
 
@@ -131,7 +150,8 @@
                     <span class="text-sm font-bold text-white">AD</span>
                 </div>
                 {{-- Online Status Indicator --}}
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-blue-950"></div>
+                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-blue-950">
+                </div>
             </div>
 
             {{-- User Info --}}
