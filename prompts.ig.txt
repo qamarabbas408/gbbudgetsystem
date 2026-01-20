@@ -1,5 +1,0 @@
-lets workout ADP formulations. ADP is quite complx compare to SAP, it has more columns and more complexities. and ADP has schemes and allocations give you and idea of previous year adn current year 
-it is static not like SAP dump. lets create a table for now. sap has only approved schemes but in ADP we have unapproved schemes as well 
-
-ADP#	S.No	ADP# 2024-25    Sec Code	Dist Code	MLA-Wise	Halqa-Code	T 	Head Code	Name of Sector / Scheme	Appr. Date	Est./Appr. Cost		Exp. Upto 06-2025		Throw-forward 2025-26	Allocation for 2025-26			Re-Allocation for 2025-26 (Final Budget)			Progressive Releases			Utilization	Remarks
-																							
