@@ -24,12 +24,13 @@
 
         {{-- Upload Card --}}
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <form id="uploadForm" action="{{ route('adp.storeFormulation') }}" method="POST" enctype="multipart/form-data">
+            <form id="adpUploadForm" action="{{ route('adp.storeFormulation') }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
 
                 <div class="p-8 lg:p-10">
                     {{-- Drag and Drop Zone --}}
-                    <div id="dropZone"
+                    <div id="fileDropZone"
                         class="relative border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-indigo-50/30 rounded-2xl p-12 lg:p-16 text-center hover:border-indigo-500 hover:bg-indigo-50/50 transition-all duration-300 cursor-pointer group">
 
                         <div class="relative z-10">
@@ -45,44 +46,54 @@
                             <p class="text-gray-500 mb-6 uppercase text-[10px] font-black tracking-widest leading-none">
                                 Supports .XLSX Formulation Documents</p>
 
-                            <label for="fileInput"
+                            <label for="excelFileInput"
                                 class="inline-flex items-center px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-indigo-800 cursor-pointer transition-all duration-300 shadow-lg transform hover:-translate-y-0.5">
                                 Browse ADP File
                             </label>
 
-                            <input type="file" id="fileInput" name="adp_file" class="hidden" accept=".xlsx,.xls">
+                            <input type="file" id="excelFileInput" name="adp_file" class="hidden" accept=".xlsx,.xls">
                         </div>
 
                         {{-- Loading Overlay --}}
-                        <div id="loadingOverlay" class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center z-20">
+                        <div id="processingOverlay"
+                            class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center z-20">
                             <div class="relative">
-                                <div class="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                                <div
+                                    class="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin">
+                                </div>
                                 <div class="absolute inset-0 flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
                                     </svg>
                                 </div>
                             </div>
-                            <p class="mt-4 text-sm font-semibold text-indigo-900" id="loadingText">Processing Excel file...</p>
-                            <p class="mt-2 text-xs text-gray-600" id="loadingProgress">Reading data...</p>
+                            <p class="mt-4 text-sm font-semibold text-indigo-900" id="processingStatusText">Processing Excel
+                                file...</p>
+                            <p class="mt-2 text-xs text-gray-600" id="processingProgressText">Reading data...</p>
                         </div>
                     </div>
 
                     {{-- File Preview --}}
-                    <div id="filePreview" class="hidden mt-6">
+                    <div id="filePreviewContainer" class="hidden mt-6">
                         <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 <div
                                     class="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold">
-                                    XLS</div>
+                                    XLS
+                                </div>
                                 <div>
-                                    <p class="font-bold text-indigo-900 text-sm" id="fileName">file.xlsx</p>
-                                    <p class="text-xs text-indigo-600" id="fileSize">0 KB</p>
+                                    <p class="font-bold text-indigo-900 text-sm" id="selectedFileName">file.xlsx</p>
+                                    <p class="text-xs text-indigo-600" id="selectedFileSize">0 KB</p>
                                 </div>
                             </div>
-                            <button type="button" onclick="clearFile()" class="text-indigo-400 hover:text-indigo-600 transition-colors">
+                            <button type="button" onclick="ADPUploader.clearSelectedFile()"
+                                class="text-indigo-400 hover:text-indigo-600 transition-colors">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
                         </div>
@@ -93,7 +104,7 @@
                 <div class="bg-gray-50 px-8 py-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-xs font-black text-gray-400 uppercase mb-2">Planning Year</label>
-                        <select name="financial_year"
+                        <select name="financial_year" id="financialYearSelect"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
                             <option value="2025-26" selected>2025-26</option>
                             <option value="2024-25">2024-25</option>
@@ -111,34 +122,41 @@
     </div>
 
     {{-- ADP Verification Modal --}}
-    <div id="previewModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div id="verificationModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="fixed inset-0 bg-gray-900/90 backdrop-blur-sm transition-opacity"></div>
         <div class="relative min-h-screen flex items-center justify-center p-4">
-            <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-7xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div
+                class="relative bg-white rounded-3xl shadow-2xl w-full max-w-7xl overflow-hidden max-h-[90vh] flex flex-col">
+
                 {{-- Modal Header --}}
-                <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-8 py-6 flex justify-between items-center text-white flex-shrink-0">
+                <div
+                    class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-8 py-6 flex justify-between items-center text-white flex-shrink-0">
                     <div>
                         <h3 class="text-2xl font-bold">ADP Verification</h3>
                         <p class="text-indigo-100 text-sm">
-                            Reviewing <span id="totalRowsCount" class="font-bold">0</span> schemes 
-                            (<span id="approvedCount" class="text-green-300">0</span> approved, 
-                            <span id="unapprovedCount" class="text-red-300">0</span> un-approved)
+                            Reviewing <span id="totalSchemesCount" class="font-bold">0</span> schemes
+                            (<span id="targetedSchemesCount" class="text-green-300">0</span> targeted,
+                            <span id="nonTargetedSchemesCount" class="text-red-300">0</span> non-targeted)
                         </p>
                     </div>
-                    <button onclick="closeModal()" class="hover:bg-white/10 p-2 rounded-xl transition-colors">
+                    <button onclick="ADPUploader.closeVerificationModal()"
+                        class="hover:bg-white/10 p-2 rounded-xl transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
                 {{-- Modal Body --}}
                 <div class="p-8 overflow-y-auto flex-1">
+
                     {{-- Controls --}}
-                    <div class="flex items-center justify-between gap-4 mb-6 bg-gray-50 p-4 rounded-2xl border border-gray-200">
+                    <div
+                        class="flex items-center justify-between gap-4 mb-6 bg-gray-50 p-4 rounded-2xl border border-gray-200">
                         <div class="flex items-center gap-4">
                             <span class="text-xs font-black text-gray-400 uppercase">Display Unit:</span>
-                            <select id="unitSelector" onchange="renderModalContent()"
+                            <select id="currencyUnitSelector" onchange="ADPUploader.renderPreviewTable()"
                                 class="text-sm font-bold text-indigo-600 bg-white px-3 py-1.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                                 <option value="actual">Actual PKR</option>
                                 <option value="millions">Millions (M)</option>
@@ -146,7 +164,7 @@
                         </div>
                         <div class="flex items-center gap-3">
                             <span class="text-xs font-black text-gray-400 uppercase">Show:</span>
-                            <select id="rowLimitSelector" onchange="renderModalContent()"
+                            <select id="rowDisplayLimitSelector" onchange="ADPUploader.renderPreviewTable()"
                                 class="text-sm font-bold text-indigo-600 bg-white px-3 py-1.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                                 <option value="50">50 rows</option>
                                 <option value="100">100 rows</option>
@@ -154,7 +172,9 @@
                                 <option value="500">500 rows</option>
                                 <option value="all">All rows</option>
                             </select>
-                            <span class="text-[10px] text-gray-400 italic">Showing <span id="displayedRowsCount">0</span> of <span id="totalRowsCount2">0</span></span>
+                            <span class="text-[10px] text-gray-400 italic">
+                                Showing <span id="displayedRowsCount">0</span> of <span id="totalRowsCount">0</span>
+                            </span>
                         </div>
                     </div>
 
@@ -166,15 +186,27 @@
                                     <tr>
                                         <th class="px-4 py-3 font-bold uppercase border-r border-gray-700">#</th>
                                         <th class="px-4 py-3 font-bold uppercase border-r border-gray-700">ADP No.</th>
-                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 min-w-[300px]">Scheme Name</th>
-                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 text-center">Status</th>
-                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 text-right">Est. Cost</th>
-                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 text-right">Allocation</th>
-                                        <th class="px-4 py-3 font-bold uppercase">District / Halqa</th>
+                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 min-w-[300px]">
+                                            Scheme Name</th>
+                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700">Appr. Date</th>
+                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700">District / Halqa
+                                        </th>
+                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 text-center">
+                                            Dist. Code</th>
+                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 text-center">
+                                            Targeted</th>
+                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 text-right">Exp.
+                                            Upto June/2025</th>
+                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 text-right">Est.
+                                            Cost</th>
+                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 text-right">
+                                            Throw-forward 2025-26</th>
+                                        <th class="px-4 py-3 font-bold uppercase border-r border-gray-700 text-right">
+                                            Allocation 2025-26</th>
                                     </tr>
                                 </thead>
                                 <tbody id="previewTableBody" class="divide-y divide-gray-100 bg-white">
-                                    {{-- Rows rendered via JS --}}
+                                    {{-- Rows rendered via JavaScript --}}
                                 </tbody>
                             </table>
                         </div>
@@ -182,11 +214,13 @@
                 </div>
 
                 {{-- Footer --}}
-                <div class="bg-gray-50 px-8 py-6 border-t-2 border-gray-200 flex justify-between items-center flex-shrink-0">
-                    <button onclick="closeModal()" class="px-6 py-2.5 text-gray-600 font-bold hover:text-gray-800 hover:bg-gray-200 rounded-xl transition-all">
+                <div
+                    class="bg-gray-50 px-8 py-6 border-t-2 border-gray-200 flex justify-between items-center flex-shrink-0">
+                    <button onclick="ADPUploader.closeVerificationModal()"
+                        class="px-6 py-2.5 text-gray-600 font-bold hover:text-gray-800 hover:bg-gray-200 rounded-xl transition-all">
                         Cancel
                     </button>
-                    <button onclick="submitFinalData()" id="confirmBtn"
+                    <button onclick="ADPUploader.submitADPData()" id="confirmSyncButton"
                         class="px-10 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-black rounded-2xl shadow-xl hover:from-indigo-700 hover:to-indigo-800 transition-all flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -202,321 +236,474 @@
 @push('scripts')
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script>
-        (function() {
+        /**
+         * ADP Formulation Upload Module
+         * Handles Excel file upload, parsing, validation and submission
+         */
+        const ADPUploader = (function() {
             'use strict';
 
-            const dropZone = document.getElementById('dropZone');
-            const fileInput = document.getElementById('fileInput');
-            const filePreview = document.getElementById('filePreview');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const loadingText = document.getElementById('loadingText');
-            const loadingProgress = document.getElementById('loadingProgress');
-            
-            let globalSapData = [];
-            let processingAborted = false;
+            // ==================== CONSTANTS ====================
+            const CONFIG = {
+                MAX_FILE_SIZE: 50 * 1024 * 1024, // 50MB
+                TARGET_SHEET_NAME: "ADP 2025-26",
+                HEADER_ROW_INDEX: 2, // Row 3 in Excel (0-indexed)
+                CHUNK_SIZE: 100,
+                UI_UPDATE_DELAY: 10,
 
-            // 1. Drag and Drop Setup
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(name => {
-                dropZone.addEventListener(name, e => { 
-                    e.preventDefault(); 
-                    e.stopPropagation(); 
+                // Head codes to ignore (placeholder rows)
+                IGNORED_HEAD_CODES: [
+                    "A01270", "A02102", "A03970", "A09101", "A09501",
+                    "A09601", "A09701", "A12102", "A12104", "A12403", "A12404"
+                ],
+
+                // Column mapping keywords
+                COLUMN_KEYWORDS: {
+                    adpNumber: ["ADP#", "ADP NO"],
+                    serialNumber: ["S.No"],
+                    targeted: ["T "],
+                    schemeName: ["NAME OF SECTOR", "SCHEME NAME", "DESCRIPTION"],
+                    headCode: ["HEAD CODE"],
+                    estimatedCost: ["EST", "APPR. COST"],
+                    expenditure: ["EXP. UPTO"],
+                    allocation: ["ALLOCATION FOR", "ALLOC 25-26"],
+                    districtCode: ["DIST CODE"],
+                    sectorCode: ["SEC CODE"],
+                    halqa: ["MLA-WISE", "HALQA"]
+                }
+            };
+
+            // ==================== STATE ====================
+            let state = {
+                parsedSchemes: [],
+                isProcessing: false,
+                shouldAbortProcessing: false
+            };
+
+            // ==================== DOM ELEMENTS ====================
+            const elements = {
+                // Upload form elements
+                fileDropZone: document.getElementById('fileDropZone'),
+                excelFileInput: document.getElementById('excelFileInput'),
+                filePreviewContainer: document.getElementById('filePreviewContainer'),
+                selectedFileName: document.getElementById('selectedFileName'),
+                selectedFileSize: document.getElementById('selectedFileSize'),
+
+                // Processing overlay
+                processingOverlay: document.getElementById('processingOverlay'),
+                processingStatusText: document.getElementById('processingStatusText'),
+                processingProgressText: document.getElementById('processingProgressText'),
+
+                // Modal elements
+                verificationModal: document.getElementById('verificationModal'),
+                previewTableBody: document.getElementById('previewTableBody'),
+                totalSchemesCount: document.getElementById('totalSchemesCount'),
+                targetedSchemesCount: document.getElementById('targetedSchemesCount'),
+                nonTargetedSchemesCount: document.getElementById('nonTargetedSchemesCount'),
+                totalRowsCount: document.getElementById('totalRowsCount'),
+                displayedRowsCount: document.getElementById('displayedRowsCount'),
+
+                // Controls
+                currencyUnitSelector: document.getElementById('currencyUnitSelector'),
+                rowDisplayLimitSelector: document.getElementById('rowDisplayLimitSelector'),
+                financialYearSelect: document.getElementById('financialYearSelect'),
+                confirmSyncButton: document.getElementById('confirmSyncButton')
+            };
+
+            // ==================== INITIALIZATION ====================
+            function initialize() {
+                setupDragAndDrop();
+                setupFileInputListener();
+                setupCleanupListeners();
+            }
+
+            // ==================== DRAG & DROP SETUP ====================
+            function setupDragAndDrop() {
+                const preventDefaults = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                };
+
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    elements.fileDropZone.addEventListener(eventName, preventDefaults);
                 });
-            });
 
-            ['dragenter', 'dragover'].forEach(name => {
-                dropZone.addEventListener(name, () => {
-                    dropZone.classList.add('border-indigo-500', 'bg-indigo-100');
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    elements.fileDropZone.addEventListener(eventName, () => {
+                        elements.fileDropZone.classList.add('border-indigo-500', 'bg-indigo-100');
+                    });
                 });
-            });
 
-            ['dragleave', 'drop'].forEach(name => {
-                dropZone.addEventListener(name, () => {
-                    dropZone.classList.remove('border-indigo-500', 'bg-indigo-100');
+                ['dragleave', 'drop'].forEach(eventName => {
+                    elements.fileDropZone.addEventListener(eventName, () => {
+                        elements.fileDropZone.classList.remove('border-indigo-500',
+                        'bg-indigo-100');
+                    });
                 });
-            });
 
-            dropZone.addEventListener('drop', e => {
-                fileInput.files = e.dataTransfer.files;
-                handleFiles(fileInput.files);
-            });
+                elements.fileDropZone.addEventListener('drop', (e) => {
+                    elements.excelFileInput.files = e.dataTransfer.files;
+                    handleFileSelection(elements.excelFileInput.files);
+                });
+            }
 
-            fileInput.addEventListener('change', function() {
-                handleFiles(this.files);
-            });
+            function setupFileInputListener() {
+                elements.excelFileInput.addEventListener('change', function() {
+                    handleFileSelection(this.files);
+                });
+            }
 
-            // 2. Optimized File Parsing Logic with Async Processing
-            async function handleFiles(files) {
-                if (files.length === 0) return;
-                
-                const file = files[0];
-                
-                // Validate file size (max 50MB)
-                if (file.size > 50 * 1024 * 1024) {
-                    alert('File too large! Maximum size is 50MB.');
-                    clearFile();
+            function setupCleanupListeners() {
+                window.addEventListener('beforeunload', () => {
+                    state.shouldAbortProcessing = true;
+                });
+            }
+
+            // ==================== FILE HANDLING ====================
+            async function handleFileSelection(files) {
+                if (!files || files.length === 0) return;
+
+                const selectedFile = files[0];
+
+                // Validate file size
+                if (selectedFile.size > CONFIG.MAX_FILE_SIZE) {
+                    alert(`File too large! Maximum size is ${CONFIG.MAX_FILE_SIZE / (1024 * 1024)}MB.`);
+                    clearSelectedFile();
                     return;
                 }
 
-                // Update UI
-                document.getElementById('fileName').textContent = file.name;
-                document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(2) + ' KB';
-                filePreview.classList.remove('hidden');
-                
-                // Show loading overlay
-                loadingOverlay.classList.remove('hidden');
-                loadingText.textContent = 'Reading Excel file...';
-                loadingProgress.textContent = 'Preparing to process...';
-                
-                processingAborted = false;
+                // Update UI with file info
+                updateFilePreview(selectedFile);
+
+                // Show processing overlay
+                showProcessingOverlay('Reading Excel file...', 'Preparing to process...');
+
+                state.shouldAbortProcessing = false;
 
                 try {
-                    // Read file asynchronously
-                    const arrayBuffer = await readFileAsync(file);
-                    
-                    if (processingAborted) return;
-                    
-                    loadingText.textContent = 'Parsing Excel data...';
-                    loadingProgress.textContent = 'Please wait...';
-                    
-                    // Use setTimeout to allow UI to update
-                    await sleep(100);
-                    
-                    // Parse workbook
-                    const workbook = XLSX.read(new Uint8Array(arrayBuffer), { 
-                        type: 'array',
-                        cellDates: true,
-                        cellNF: false,
-                        cellText: false
-                    });
-                    
-                    if (processingAborted) return;
-                    
-                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const rows = XLSX.utils.sheet_to_json(worksheet, { 
-                        header: 1,
-                        raw: false,
-                        defval: ''
-                    });
+                    // Read and parse the file
+                    const arrayBuffer = await readFileAsArrayBuffer(selectedFile);
 
-                    loadingText.textContent = 'Analyzing data structure...';
-                    loadingProgress.textContent = `Found ${rows.length} rows`;
-                    
-                    await sleep(100);
-                    
-                    if (processingAborted) return;
+                    if (state.shouldAbortProcessing) return;
 
-                    // Find header row
-                    const headerRowIndex = findHeaderRow(rows);
-                    
-                    if (headerRowIndex === -1) {
-                        throw new Error('Could not detect ADP Header row! Please ensure your Excel file has proper headers.');
-                    }
+                    await parseExcelFile(arrayBuffer);
 
-                    loadingText.textContent = 'Processing schemes...';
-                    
-                    // Process data in chunks to prevent UI freezing
-                    const filteredData = await processDataInChunks(rows, headerRowIndex);
-                    
-                    if (processingAborted) return;
-                    
-                    globalSapData = filteredData;
-                    
-                    loadingText.textContent = 'Almost done...';
-                    loadingProgress.textContent = `Processed ${filteredData.length} schemes`;
-                    
-                    await sleep(300);
-                    
-                    // Hide loading and show modal
-                    loadingOverlay.classList.add('hidden');
-                    
-                    // Update counts
-                    const approved = filteredData.filter(r => r.Status === 'Approved').length;
-                    const unapproved = filteredData.filter(r => r.Status === 'Un-Approved').length;
-                    
-                    document.getElementById('totalRowsCount').textContent = filteredData.length;
-                    document.getElementById('totalRowsCount2').textContent = filteredData.length;
-                    document.getElementById('approvedCount').textContent = approved;
-                    document.getElementById('unapprovedCount').textContent = unapproved;
-                    
-                    renderModalContent();
-                    
-                } catch (err) {
-                    console.error('Error processing file:', err);
-                    loadingOverlay.classList.add('hidden');
-                    alert('Error processing file: ' + err.message);
-                    clearFile();
+                } catch (error) {
+                    console.error('File processing error:', error);
+                    hideProcessingOverlay();
+                    alert('Error processing file: ' + error.message);
+                    clearSelectedFile();
                 }
             }
 
-            // Helper: Read file as ArrayBuffer asynchronously
-            function readFileAsync(file) {
+            function updateFilePreview(file) {
+                elements.selectedFileName.textContent = file.name;
+                elements.selectedFileSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
+                elements.filePreviewContainer.classList.remove('hidden');
+            }
+
+            function showProcessingOverlay(statusText, progressText) {
+                elements.processingOverlay.classList.remove('hidden');
+                elements.processingStatusText.textContent = statusText;
+                elements.processingProgressText.textContent = progressText;
+            }
+
+            function hideProcessingOverlay() {
+                elements.processingOverlay.classList.add('hidden');
+            }
+
+            async function readFileAsArrayBuffer(file) {
                 return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = e => resolve(e.target.result);
-                    reader.onerror = reject;
-                    reader.readAsArrayBuffer(file);
+                    const fileReader = new FileReader();
+                    fileReader.onload = (event) => resolve(event.target.result);
+                    fileReader.onerror = reject;
+                    fileReader.readAsArrayBuffer(file);
                 });
             }
 
-            // Helper: Sleep function for UI updates
-            function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
+            // ==================== EXCEL PARSING ====================
+            async function parseExcelFile(arrayBuffer) {
+                showProcessingOverlay('Parsing Excel data...', 'Please wait...');
+                await sleep(100);
 
-            // Helper: Find header row efficiently
-            function findHeaderRow(rows) {
-                const maxRowsToCheck = Math.min(rows.length, 30);
-                for (let i = 0; i < maxRowsToCheck; i++) {
-                    if (rows[i] && rows[i].some(cell => cell && cell.toString().toUpperCase().includes("ADP"))) {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-
-            // Helper: Process data in chunks to prevent UI freezing
-            async function processDataInChunks(rows, headerRowIndex) {
-                const headerRow = rows[headerRowIndex];
-                const findCol = (keys) => headerRow.findIndex(c => 
-                    c && keys.some(k => c.toString().toUpperCase().includes(k.toUpperCase()))
-                );
-
-                const colMap = {
-                    adp: findCol(["ADP#", "ADP NO"]),
-                    name: findCol(["NAME OF SECTOR", "SCHEME NAME", "DESCRIPTION"]),
-                    cost: findCol(["EST", "APPR. COST"]),
-                    exp: findCol(["EXP. UPTO"]),
-                    alloc: findCol(["ALLOCATION FOR", "ALLOC 25-26", "ALLOCATION 2025-26"]),
-                    dist: findCol(["DIST CODE", "DISTRICT"]),
-                    sec: findCol(["SEC CODE", "SECTOR"]),
-                    halqa: findCol(["MLA-WISE", "HALQA"]),
-                    head: findCol(["HEAD CODE"])
-                };
-
-                const filteredData = [];
-                const chunkSize = 100; // Process 100 rows at a time
-                const totalRows = rows.length - headerRowIndex - 1;
-                
-                for (let i = headerRowIndex + 1; i < rows.length; i += chunkSize) {
-                    if (processingAborted) return [];
-                    
-                    const chunk = rows.slice(i, Math.min(i + chunkSize, rows.length));
-                    
-                    // Update progress
-                    const processed = Math.min(i - headerRowIndex, totalRows);
-                    loadingProgress.textContent = `Processing: ${processed} / ${totalRows} rows`;
-                    
-                    // Process chunk
-                    chunk.forEach(row => {
-                        const schemeName = row[colMap.name] ? row[colMap.name].toString().trim() : null;
-                        
-                        // Skip invalid rows
-                        if (!schemeName || schemeName.length < 5) return;
-                        
-                        const adpVal = row[colMap.adp] ? row[colMap.adp].toString().trim() : "";
-                        const isApproved = adpVal && adpVal !== "" && !adpVal.toUpperCase().includes("NEW");
-
-                        filteredData.push({
-                            "ADP_NO": adpVal || "NEW",
-                            "Description": schemeName,
-                            "Sector": row[colMap.sec] || "N/A",
-                            "District": row[colMap.dist] || "N/A",
-                            "Halqa": row[colMap.halqa] || "N/A",
-                            "Status": isApproved ? "Approved" : "Un-Approved",
-                            "Est_Cost": parseFloat(row[colMap.cost]) || 0,
-                            "Exp_June": parseFloat(row[colMap.exp]) || 0,
-                            "Allocation": parseFloat(row[colMap.alloc]) || 0,
-                            "Head": row[colMap.head] || ""
-                        });
-                    });
-                    
-                    // Allow UI to breathe
-                    await sleep(10);
-                }
-                
-                return filteredData;
-            }
-
-            // 3. Optimized Modal Rendering with Virtual Scrolling
-            window.renderModalContent = function() {
-                const unit = document.getElementById('unitSelector').value;
-                const rowLimit = document.getElementById('rowLimitSelector').value;
-                
-                const format = (val) => {
-                    if (unit === 'millions') {
-                        return (val / 1000000).toFixed(2) + ' M';
-                    }
-                    return new Intl.NumberFormat('en-PK').format(val);
-                };
-
-                const tbody = document.getElementById('previewTableBody');
-                
-                // Determine how many rows to display
-                const displayLimit = rowLimit === 'all' ? globalSapData.length : parseInt(rowLimit);
-                const dataToDisplay = globalSapData.slice(0, displayLimit);
-                
-                document.getElementById('displayedRowsCount').textContent = dataToDisplay.length;
-                
-                // Use DocumentFragment for better performance
-                const fragment = document.createDocumentFragment();
-                
-                dataToDisplay.forEach((row, index) => {
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-gray-50 transition-colors';
-                    
-                    const statusClass = row.Status === 'Approved' 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-red-100 text-red-700';
-                    
-                    tr.innerHTML = `
-                        <td class="px-4 py-3 text-gray-500 font-mono text-xs border-r border-gray-100">${index + 1}</td>
-                        <td class="px-4 py-3 font-mono font-bold text-indigo-700 border-r border-gray-100">${row.ADP_NO}</td>
-                        <td class="px-4 py-3 text-gray-800 font-medium border-r border-gray-100">
-                            <div class="max-w-md truncate" title="${row.Description}">${row.Description}</div>
-                        </td>
-                        <td class="px-4 py-3 text-center border-r border-gray-100">
-                            <span class="px-2.5 py-1 rounded-full text-[9px] font-black uppercase ${statusClass} inline-flex items-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full ${row.Status === 'Approved' ? 'bg-green-500' : 'bg-red-500'}"></span>
-                                ${row.Status}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 text-right font-mono font-bold text-gray-900 border-r border-gray-100">${format(row.Est_Cost)}</td>
-                        <td class="px-4 py-3 text-right font-mono text-indigo-600 font-semibold border-r border-gray-100">${format(row.Allocation)}</td>
-                        <td class="px-4 py-3 text-[10px] text-gray-500">
-                            <div class="flex items-center gap-1">
-                                <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                <span>${row.District} / ${row.Halqa}</span>
-                            </div>
-                        </td>
-                    `;
-                    
-                    fragment.appendChild(tr);
+                // Parse workbook with optimized settings
+                const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+                    type: 'array',
+                    cellDates: true,
+                    cellNF: false,
+                    cellText: false
                 });
-                
-                // Clear and append all at once
-                tbody.innerHTML = '';
-                tbody.appendChild(fragment);
-                
+
+                if (state.shouldAbortProcessing) return;
+
+                // Get target worksheet
+                const worksheet = workbook.Sheets[CONFIG.TARGET_SHEET_NAME];
+
+                if (!worksheet) {
+                    throw new Error(`Worksheet "${CONFIG.TARGET_SHEET_NAME}" not found in the file.`);
+                }
+
+                // Convert to rows
+                const rows = XLSX.utils.sheet_to_json(worksheet, {
+                    header: 1,
+                    raw: false,
+                    defval: ''
+                });
+
+                showProcessingOverlay('Analyzing data structure...', `Found ${rows.length} rows`);
+                await sleep(100);
+
+                if (state.shouldAbortProcessing) return;
+
+                // Validate header row
+                validateHeaderRow(rows);
+
+                showProcessingOverlay('Processing schemes...', 'Starting...');
+
+                // Process data in chunks
+                const parsedData = await processExcelDataInChunks(rows);
+
+                if (state.shouldAbortProcessing) return;
+
+                state.parsedSchemes = parsedData;
+
+                showProcessingOverlay('Almost done...', `Processed ${parsedData.length} schemes`);
+                await sleep(300);
+
+                hideProcessingOverlay();
+
+                // Update statistics and show modal
+                updateStatistics(parsedData);
+                renderPreviewTable();
+            }
+
+            function validateHeaderRow(rows) {
+                const headerRow = rows[CONFIG.HEADER_ROW_INDEX];
+
+                if (!headerRow || !headerRow.some(cell => cell && cell.toString().includes("ADP"))) {
+                    throw new Error(
+                        `Could not find headers at row ${CONFIG.HEADER_ROW_INDEX + 1}. Please check your Excel format.`
+                        );
+                }
+            }
+
+            async function processExcelDataInChunks(rows) {
+                const headerRow = rows[CONFIG.HEADER_ROW_INDEX];
+                const columnMapping = buildColumnMapping(headerRow);
+
+                const processedSchemes = [];
+                const totalRows = rows.length - CONFIG.HEADER_ROW_INDEX - 1;
+
+                for (let rowIndex = CONFIG.HEADER_ROW_INDEX + 1; rowIndex < rows.length; rowIndex++) {
+                    if (state.shouldAbortProcessing) return [];
+
+                    const currentRow = rows[rowIndex];
+
+                    // Skip empty rows
+                    if (!currentRow || currentRow.length === 0) continue;
+
+                    //ignore after row 1851
+                    if (currentRow[8] === 'Block Allocation') {
+                        break;
+                    }
+
+                    // Process row
+                    const schemeData = processSchemeRow(currentRow, columnMapping);
+
+                    if (schemeData) {
+                        processedSchemes.push(schemeData);
+                    }
+
+                    // Update progress periodically
+                    if (rowIndex % 100 === 0) {
+                        const processedCount = rowIndex - CONFIG.HEADER_ROW_INDEX;
+                        elements.processingProgressText.textContent =
+                            `Processing: ${processedCount} / ${totalRows} rows`;
+                        await sleep(CONFIG.UI_UPDATE_DELAY);
+                    }
+                }
+
+                return processedSchemes;
+            }
+
+            function buildColumnMapping(headerRow) {
+                const findColumnIndex = (keywords) => {
+                    return headerRow.findIndex(cell =>
+                        cell && keywords.some(keyword =>
+                            cell.toString().toUpperCase().includes(keyword.toUpperCase())
+                        )
+                    );
+                };
+
+                return {
+                    adpNumber: findColumnIndex(CONFIG.COLUMN_KEYWORDS.adpNumber),
+                    serialNumber: findColumnIndex(CONFIG.COLUMN_KEYWORDS.serialNumber),
+                    targeted: findColumnIndex(CONFIG.COLUMN_KEYWORDS.targeted),
+                    schemeName: findColumnIndex(CONFIG.COLUMN_KEYWORDS.schemeName),
+                    headCode: findColumnIndex(CONFIG.COLUMN_KEYWORDS.headCode),
+                    estimatedCost: findColumnIndex(CONFIG.COLUMN_KEYWORDS.estimatedCost),
+                    expenditure: findColumnIndex(CONFIG.COLUMN_KEYWORDS.expenditure),
+                    allocation: findColumnIndex(CONFIG.COLUMN_KEYWORDS.allocation),
+                    districtCode: findColumnIndex(CONFIG.COLUMN_KEYWORDS.districtCode),
+                    sectorCode: findColumnIndex(CONFIG.COLUMN_KEYWORDS.sectorCode),
+                    halqa: findColumnIndex(CONFIG.COLUMN_KEYWORDS.halqa)
+                };
+            }
+
+            function processSchemeRow(row, columnMapping) {
+                // Extract head code
+                const headCode = row[columnMapping.headCode] ? row[columnMapping.headCode].toString().trim() : "";
+
+                // Skip ignored head codes (placeholder rows)
+                if (CONFIG.IGNORED_HEAD_CODES.includes(headCode)) {
+                    return null;
+                }
+
+                // Extract scheme name
+                const schemeName = row[columnMapping.schemeName] ? row[columnMapping.schemeName].toString().trim() :
+                    "";
+                const adpNumber = row[columnMapping.adpNumber] ? row[columnMapping.adpNumber].toString().trim() :
+                "";
+
+                // Skip invalid rows (sector headers, empty rows)
+                if (!schemeName || schemeName.length < 5 || (adpNumber === "" && row[1] === "")) {
+                    return null;
+                }
+
+                // Parse targeted status
+                const targetedValue = row[10] ? row[10].toString().trim().toUpperCase() : "";
+                const isTargeted = (targetedValue === 'T');
+
+                // Parse and clean approval date
+                const rawApprovalDate = row[14] ? row[14].toString() : "";
+                const cleanedApprovalDate = rawApprovalDate.replace(/,/g, '').trim();
+
+                // Parse financial values
+                const estimatedCost = parseFloat(row[columnMapping.estimatedCost]) || 0;
+                const expenditureToDate = parseFloat(row[columnMapping.expenditure]) || 0;
+                const allocation = parseFloat(row[columnMapping.allocation]) || 0;
+                if (adpNumber === "1851") {
+                    console.log(row);
+                }
+                // Build scheme object
+                return {
+                    adpNumber: adpNumber || "NEW",
+                    adpCode: row[1] || "",
+                    description: schemeName,
+                    sectorCode: row[columnMapping.sectorCode] || "N/A",
+                    districtCode: row[columnMapping.districtCode] || "N/A",
+                    halqa: row[columnMapping.halqa] || "N/A",
+                    isTargeted: isTargeted ? 'Yes' : 'No',
+                    estimatedCost: estimatedCost,
+                    expenditureToDate: expenditureToDate,
+                    throwForward: estimatedCost - expenditureToDate,
+                    allocation: allocation,
+                    headCode: headCode,
+                    approvalDate: cleanedApprovalDate
+                };
+            }
+
+            // ==================== UI RENDERING ====================
+            function updateStatistics(schemes) {
+                const targetedCount = schemes.filter(s => s.isTargeted === 'Yes').length;
+                const nonTargetedCount = schemes.filter(s => s.isTargeted === 'No').length;
+
+                elements.totalSchemesCount.textContent = schemes.length;
+                elements.totalRowsCount.textContent = schemes.length;
+                elements.targetedSchemesCount.textContent = targetedCount;
+                elements.nonTargetedSchemesCount.textContent = nonTargetedCount;
+            }
+
+            function renderPreviewTable() {
+                const currencyUnit = elements.currencyUnitSelector.value;
+                const displayLimit = elements.rowDisplayLimitSelector.value;
+
+                const formatCurrency = (value) => {
+                    if (currencyUnit === 'millions') {
+                        return (value / 1000000).toFixed(2) + ' M';
+                    }
+                    return new Intl.NumberFormat('en-PK').format(value);
+                };
+
+                // Determine display limit
+                const rowLimit = displayLimit === 'all' ? state.parsedSchemes.length : parseInt(displayLimit);
+                const schemesToDisplay = state.parsedSchemes.slice(0, rowLimit);
+
+                elements.displayedRowsCount.textContent = schemesToDisplay.length;
+
+                // Use DocumentFragment for efficient DOM manipulation
+                const tableFragment = document.createDocumentFragment();
+
+                schemesToDisplay.forEach((scheme, index) => {
+                    const row = createTableRow(scheme, index + 1, formatCurrency);
+                    tableFragment.appendChild(row);
+                });
+
+                // Update table in one operation
+                elements.previewTableBody.innerHTML = '';
+                elements.previewTableBody.appendChild(tableFragment);
+
                 // Show modal
-                document.getElementById('previewModal').classList.remove('hidden');
-            };
+                elements.verificationModal.classList.remove('hidden');
+            }
 
-            // 4. Optimized Final Submission Logic
-            window.submitFinalData = async function() {
-                const finYear = document.querySelector('select[name="financial_year"]').value;
-                const confirmBtn = document.getElementById('confirmBtn');
-                const originalHTML = confirmBtn.innerHTML;
+            function createTableRow(scheme, rowNumber, formatCurrency) {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50 transition-colors';
 
-                confirmBtn.disabled = true;
-                confirmBtn.innerHTML = `
+                const statusBadgeClass = scheme.isTargeted === 'Yes' ?
+                    'bg-green-100 text-green-700' :
+                    'bg-red-100 text-red-700';
+
+                const statusDotClass = scheme.isTargeted === 'Yes' ?
+                    'bg-green-500' :
+                    'bg-red-500';
+
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-gray-500 font-mono text-xs border-r border-gray-100">${rowNumber}</td>
+                    <td class="px-4 py-3 font-mono font-bold text-indigo-700 border-r border-gray-100">${scheme.adpCode}</td>
+                    <td class="px-4 py-3 text-gray-800 font-medium border-r border-gray-100">
+                        <div class="max-w-md truncate" title="${scheme.description}">${scheme.description}</div>
+                    </td>
+                    <td class="px-4 py-3 text-center border-r border-gray-100 text-gray-600 font-mono text-xs">${scheme.approvalDate}</td>
+                    <td class="px-4 py-3 text-[10px] text-gray-500 border-r border-gray-100">
+                        <div class="flex items-center gap-1">
+                            <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span>${scheme.districtCode} / ${scheme.halqa}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-center border-r border-gray-100 text-gray-700 font-semibold">${scheme.districtCode}</td>
+                    <td class="px-4 py-3 text-center border-r border-gray-100">
+                        <span class="px-2.5 py-1 rounded-full text-[9px] font-black uppercase ${statusBadgeClass} inline-flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full ${statusDotClass}"></span>
+                            ${scheme.isTargeted}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-right font-mono font-bold text-gray-900 border-r border-gray-100">${formatCurrency(scheme.expenditureToDate)}</td>
+                    <td class="px-4 py-3 text-right font-mono font-bold text-gray-900 border-r border-gray-100">${formatCurrency(scheme.estimatedCost)}</td>
+                    <td class="px-4 py-3 text-right font-mono text-orange-600 font-semibold border-r border-gray-100">${formatCurrency(scheme.throwForward)}</td>
+                    <td class="px-4 py-3 text-right font-mono text-indigo-600 font-semibold border-r border-gray-100">${formatCurrency(scheme.allocation)}</td>
+                `;
+
+                return tr;
+            }
+
+            // ==================== DATA SUBMISSION ====================
+            async function submitADPData() {
+                const financialYear = elements.financialYearSelect.value;
+                const confirmButton = elements.confirmSyncButton;
+                const originalButtonHTML = confirmButton.innerHTML;
+
+                confirmButton.disabled = true;
+                confirmButton.innerHTML = `
                     <svg class="animate-spin h-5 w-5 mr-3 text-white inline" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Syncing ${globalSapData.length} schemes...
+                    Syncing ${state.parsedSchemes.length} schemes...
                 `;
 
                 try {
@@ -528,21 +715,21 @@
                             'X-CSRF-TOKEN': "{{ csrf_token() }}"
                         },
                         body: JSON.stringify({
-                            data: globalSapData,
-                            financial_year: finYear
+                            data: state.parsedSchemes,
+                            financial_year: financialYear
                         })
                     });
 
                     const result = await response.json();
-                    
+
                     if (response.ok) {
-                        confirmBtn.innerHTML = `
+                        confirmButton.innerHTML = `
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
                             Success!
                         `;
-                        
+
                         setTimeout(() => {
                             window.location.href = "{{ route('adp.formulation') }}";
                         }, 1000);
@@ -552,28 +739,41 @@
                 } catch (error) {
                     console.error('Upload error:', error);
                     alert('Error: ' + error.message);
-                    confirmBtn.disabled = false;
-                    confirmBtn.innerHTML = originalHTML;
+                    confirmButton.disabled = false;
+                    confirmButton.innerHTML = originalButtonHTML;
                 }
-            };
+            }
 
-            // Helper Functions
-            window.closeModal = () => {
-                document.getElementById('previewModal').classList.add('hidden');
-            };
-            
-            window.clearFile = () => {
-                processingAborted = true;
-                fileInput.value = '';
-                filePreview.classList.add('hidden');
-                loadingOverlay.classList.add('hidden');
-                globalSapData = [];
-            };
+            // ==================== UTILITY FUNCTIONS ====================
+            function sleep(milliseconds) {
+                return new Promise(resolve => setTimeout(resolve, milliseconds));
+            }
 
-            // Cleanup on page unload
-            window.addEventListener('beforeunload', () => {
-                processingAborted = true;
-            });
+            function clearSelectedFile() {
+                state.shouldAbortProcessing = true;
+                elements.excelFileInput.value = '';
+                elements.filePreviewContainer.classList.add('hidden');
+                hideProcessingOverlay();
+                state.parsedSchemes = [];
+            }
+
+            function closeVerificationModal() {
+                elements.verificationModal.classList.add('hidden');
+            }
+
+            // ==================== PUBLIC API ====================
+            return {
+                initialize,
+                renderPreviewTable,
+                submitADPData,
+                closeVerificationModal,
+                clearSelectedFile
+            };
         })();
+
+        // Initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            ADPUploader.initialize();
+        });
     </script>
 @endpush
