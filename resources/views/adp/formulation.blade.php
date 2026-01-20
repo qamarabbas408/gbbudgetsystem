@@ -1,0 +1,590 @@
+@extends('layouts.app')
+
+@section('title', 'ADP Formulation 2025-26')
+@section('hide_floating_btn', true)
+
+@section('content')
+    <div class="max-w-[1800px] mx-auto">
+        {{-- Header Section --}}
+        <div class="mb-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div>
+                <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">
+                    ADP Formulation <span class="text-blue-600">2025-26</span>
+                </h2>
+                <p class="text-sm text-gray-500 mt-1">Comprehensive list of approved and un-approved development schemes.</p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <button id="filterBtn"
+                    class="px-4 py-2.5 bg-white border-2 border-gray-300 rounded-xl text-sm font-semibold shadow-sm hover:bg-gray-50 hover:border-blue-400 transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
+                        </path>
+                    </svg>
+                    Filters
+                </button>
+                <button id="exportBtn"
+                    class="px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl text-sm font-semibold shadow-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    Export to Excel
+                </button>
+                <button
+                    class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl text-sm font-semibold shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add New Scheme
+                </button>
+            </div>
+        </div>
+
+        {{-- Filter Panel (Hidden by default) --}}
+        <div id="filterPanel" class="hidden mb-6 bg-white rounded-xl border-2 border-gray-200 shadow-lg p-6 animate-slideDown">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-gray-800">Filter Schemes</h3>
+                <button id="clearFilters" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Clear All</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Status</label>
+                    <select
+                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                        <option value="">All Statuses</option>
+                        <option value="approved">✓ Approved</option>
+                        <option value="unapproved">✗ Un-Approved</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">District</label>
+                    <select
+                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                        <option value="">All Districts</option>
+                        <option value="gilgit">Gilgit</option>
+                        <option value="skardu">Skardu</option>
+                        <option value="ghanche">Ghanche</option>
+                        <option value="shigar">Shigar</option>
+                        <option value="hunza">Hunza</option>
+                        <option value="nagar">Nagar</option>
+                        <option value="ghizer">Ghizer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Sector</label>
+                    <select
+                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                        <option value="">All Sectors</option>
+                        <option value="infrastructure">Infrastructure</option>
+                        <option value="education">Education</option>
+                        <option value="health">Health</option>
+                        <option value="agriculture">Agriculture</option>
+                        <option value="it">IT & Telecom</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">MLA/Halqa</label>
+                    <select
+                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                        <option value="">All Halqas</option>
+                        <option value="gbla-1">GBLA-1</option>
+                        <option value="gbla-2">GBLA-2</option>
+                        <option value="gbla-3">GBLA-3</option>
+                        <option value="gbla-4">GBLA-4</option>
+                        <option value="gbla-5">GBLA-5</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button
+                        class="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors shadow-md">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {{-- Stats Row --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div
+                class="bg-gradient-to-br from-blue-50 via-white to-blue-50/50 p-6 rounded-2xl border-2 border-blue-100 shadow-md hover:shadow-xl transition-all hover:scale-105 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-black text-blue-600 uppercase tracking-wider mb-1">Total Schemes</p>
+                        <p class="text-4xl font-black text-gray-800 mb-1">1,421</p>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-gray-500">All projects</span>
+                        </div>
+                    </div>
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-green-50 via-white to-green-50/50 p-6 rounded-2xl border-2 border-green-100 shadow-md hover:shadow-xl transition-all hover:scale-105 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-black text-green-600 uppercase tracking-wider mb-1">Approved</p>
+                        <p class="text-4xl font-black text-green-600 mb-1">945</p>
+                        <div class="flex items-center gap-1">
+                            <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-xs text-green-600 font-bold">66.5%</span>
+                            <span class="text-xs text-gray-500">of total</span>
+                        </div>
+                    </div>
+                    <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-red-50 via-white to-red-50/50 p-6 rounded-2xl border-2 border-red-100 shadow-md hover:shadow-xl transition-all hover:scale-105 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-black text-red-600 uppercase tracking-wider mb-1">Un-Approved</p>
+                        <p class="text-4xl font-black text-red-500 mb-1">476</p>
+                        <div class="flex items-center gap-1">
+                            <svg class="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-xs text-red-600 font-bold">33.5%</span>
+                            <span class="text-xs text-gray-500">pending</span>
+                        </div>
+                    </div>
+                    <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-purple-50 via-white to-purple-50/50 p-6 rounded-2xl border-2 border-purple-100 shadow-md hover:shadow-xl transition-all hover:scale-105 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-black text-purple-600 uppercase tracking-wider mb-1">Total Allocation</p>
+                        <p class="text-4xl font-black text-purple-600 mb-1">₨45.2B</p>
+                        <div class="flex items-center gap-1">
+                            <svg class="w-3 h-3 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-xs text-purple-600 font-bold">FY 2025-26</span>
+                        </div>
+                    </div>
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Search and View Options --}}
+        <div class="mb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+            <div class="relative flex-1 max-w-md">
+                <input type="text" id="searchInput" placeholder="Search by scheme name, ADP#, district..."
+                    class="w-full pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-gray-600 font-bold">Rows per page:</span>
+                <select
+                    class="px-3 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                    <option>10</option>
+                    <option>25</option>
+                    <option selected>50</option>
+                    <option>100</option>
+                    <option>All</option>
+                </select>
+            </div>
+        </div>
+
+        {{-- Main Table Container --}}
+        <div class="bg-white rounded-2xl shadow-2xl border-2 border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto overflow-y-auto max-h-[700px] scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-100">
+                <table class="w-full text-left text-[11px] border-collapse min-w-[2000px]">
+                    <thead class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white sticky top-0 z-20">
+                        {{-- Main Header Row --}}
+                        <tr class="border-b-2 border-gray-700">
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 sticky left-0 bg-gray-900 z-30 w-20">
+                                <div class="flex items-center gap-2">
+                                    ADP#
+                                    <svg class="w-3 h-3 text-gray-400 cursor-pointer hover:text-white transition-colors" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                    </svg>
+                                </div>
+                            </th>
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 sticky left-20 bg-gray-900 z-30 min-w-[320px]">
+                                <div class="flex items-center gap-2">
+                                    Scheme Name
+                                    <svg class="w-3 h-3 text-gray-400 cursor-pointer hover:text-white transition-colors" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                    </svg>
+                                </div>
+                            </th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">Sector</th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">District</th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">MLA/Halqa</th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">Appr. Date</th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">Status</th>
+                            <th colspan="2" class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-blue-900/50">
+                                Est./Appr. Cost
+                            </th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
+                                Exp. Upto<br>06/2025
+                            </th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">
+                                Throw-<br>forward
+                            </th>
+                            <th colspan="2" class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-green-900/50">
+                                Allocation<br>2025-26
+                            </th>
+                            <th colspan="2" class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-purple-900/50">
+                                Revised<br>Allocation
+                            </th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
+                                Progressive<br>Release
+                            </th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
+                                Exp. Beyond<br>2025-26
+                            </th>
+                            <th rowspan="2" class="px-3 py-4 font-black uppercase text-center">Remarks</th>
+                        </tr>
+                        {{-- Sub Header Row --}}
+                        <tr class="text-[10px]">
+                            <th class="px-2 py-2 font-bold uppercase border-r border-gray-700 text-center bg-blue-900/30">Total</th>
+                            <th class="px-2 py-2 font-bold uppercase border-r-2 border-gray-700 text-center bg-blue-900/30">F.Aid</th>
+                            <th class="px-2 py-2 font-bold uppercase border-r border-gray-700 text-center bg-green-900/30">Total</th>
+                            <th class="px-2 py-2 font-bold uppercase border-r-2 border-gray-700 text-center bg-green-900/30">F.Aid</th>
+                            <th class="px-2 py-2 font-bold uppercase border-r border-gray-700 text-center bg-purple-900/30">Total</th>
+                            <th class="px-2 py-2 font-bold uppercase border-r-2 border-gray-700 text-center bg-purple-900/30">F.Aid</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 bg-white">
+                        {{-- Sample Row 1: Approved Scheme --}}
+                        <tr class="hover:bg-blue-50/70 transition-all group">
+                            <td class="px-3 py-4 font-bold text-blue-700 sticky left-0 bg-white group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
+                                A001
+                            </td>
+                            <td class="px-3 py-4 font-semibold text-gray-900 sticky left-20 bg-white group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="line-clamp-2">Construction of Karakoram Highway Phase-II Extension</span>
+                                    <button class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                        <svg class="w-4 h-4 text-blue-600 hover:text-blue-800" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="px-3 py-4 text-center">
+                                <span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-lg text-[10px] font-bold whitespace-nowrap">
+                                    Infrastructure
+                                </span>
+                            </td>
+                            <td class="px-3 py-4 text-gray-800 font-semibold text-center">Gilgit</td>
+                            <td class="px-3 py-4 text-gray-700 font-mono text-xs text-center">GBLA-1</td>
+                            <td class="px-3 py-4 text-center text-gray-700 font-mono text-xs">15-Mar-2024</td>
+                            <td class="px-3 py-4 text-center">
+                                <span class="px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-black text-[9px] uppercase inline-flex items-center gap-1.5 shadow-sm">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                                    Approved
+                                </span>
+                            </td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">250,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-blue-700 font-semibold bg-blue-50/50">50,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-700">85,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">165,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-green-700 font-bold bg-green-50/30">45,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-green-600 font-semibold bg-green-50/50">15,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-purple-700 font-bold bg-purple-50/30">50,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-purple-600 font-semibold bg-purple-50/50">20,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-teal-600 font-semibold">35,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-600">120,000,000</td>
+                            <td class="px-3 py-4 text-gray-700 text-xs">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded-md font-medium">On schedule</span>
+                            </td>
+                        </tr>
+
+                        {{-- Sample Row 2: Un-Approved Scheme --}}
+                        <tr class="hover:bg-red-50/70 transition-all bg-red-50/20 group">
+                            <td class="px-3 py-4 font-bold text-gray-500 sticky left-0 bg-red-50/20 group-hover:bg-red-50/70 z-10 border-r border-gray-200">
+                                New
+                            </td>
+                            <td class="px-3 py-4 font-semibold text-gray-900 sticky left-20 bg-red-50/20 group-hover:bg-red-50/70 z-10 border-r border-gray-200">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="line-clamp-2">Establishment of IT Center in Gilgit (Proposed)</span>
+                                    <button class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                        <svg class="w-4 h-4 text-blue-600 hover:text-blue-800" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="px-3 py-4 text-center">
+                                <span class="px-2.5 py-1 bg-purple-100 text-purple-800 rounded-lg text-[10px] font-bold whitespace-nowrap">
+                                    IT & Telecom
+                                </span>
+                            </td>
+                            <td class="px-3 py-4 text-gray-800 font-semibold text-center">Gilgit</td>
+                            <td class="px-3 py-4 text-gray-700 font-mono text-xs text-center">GBLA-2</td>
+                            <td class="px-3 py-4 text-center text-gray-400 font-mono text-xs">—</td>
+                            <td class="px-3 py-4 text-center">
+                                <span class="px-2.5 py-1 bg-red-100 text-red-800 rounded-full font-black text-[9px] uppercase inline-flex items-center gap-1.5 shadow-sm">
+                                    <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                                    Un-Approved
+                                </span>
+                            </td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">80,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-blue-50/50">0</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-400">0</td>
+                            <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">80,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-green-50/30">0</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-green-50/50">0</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-purple-50/30">0</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-purple-50/50">0</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-400">0</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-400">0</td>
+                            <td class="px-3 py-4 text-gray-700 text-xs">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-md font-medium">Pending PDWP</span>
+                            </td>
+                        </tr>
+
+                        {{-- Sample Row 3: Another Approved Scheme --}}
+                        <tr class="hover:bg-blue-50/70 transition-all group">
+                            <td class="px-3 py-4 font-bold text-blue-700 sticky left-0 bg-white group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
+                                A002
+                            </td>
+                            <td class="px-3 py-4 font-semibold text-gray-900 sticky left-20 bg-white group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="line-clamp-2">Upgradation of District Headquarters Hospital Skardu</span>
+                                    <button class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                        <svg class="w-4 h-4 text-blue-600 hover:text-blue-800" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="px-3 py-4 text-center">
+                                <span class="px-2.5 py-1 bg-green-100 text-green-800 rounded-lg text-[10px] font-bold">
+                                    Health
+                                </span>
+                            </td>
+                            <td class="px-3 py-4 text-gray-800 font-semibold text-center">Skardu</td>
+                            <td class="px-3 py-4 text-gray-700 font-mono text-xs text-center">GBLA-5</td>
+                            <td class="px-3 py-4 text-center text-gray-700 font-mono text-xs">22-Jan-2024</td>
+                            <td class="px-3 py-4 text-center">
+                                <span class="px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-black text-[9px] uppercase inline-flex items-center gap-1.5 shadow-sm">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                                    Approved
+                                </span>
+                            </td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">120,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-blue-700 font-semibold bg-blue-50/50">30,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-700">35,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">85,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-green-700 font-bold bg-green-50/30">30,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-green-600 font-semibold bg-green-50/50">10,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-purple-700 font-bold bg-purple-50/30">32,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-purple-600 font-semibold bg-purple-50/50">12,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-teal-600 font-semibold">28,000,000</td>
+                            <td class="px-3 py-4 text-right font-mono text-gray-600">55,000,000</td>
+                            <td class="px-3 py-4 text-gray-700 text-xs">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-md font-medium">Equipment pending</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- Enhanced Pagination --}}
+            <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-t-2 border-gray-200">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-sm text-gray-700 font-medium">
+                        Showing <span class="font-bold text-blue-600">1</span> to 
+                        <span class="font-bold text-blue-600">3</span> of 
+                        <span class="font-bold text-blue-600">1,421</span> schemes
+                    </div>
+                    <div class="flex gap-2">
+                        <button
+                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-400 bg-white cursor-not-allowed"
+                            disabled>
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                            Previous
+                        </button>
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-md">1</button>
+                        <button
+                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-blue-400 transition-all">2</button>
+                        <button
+                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-blue-400 transition-all">3</button>
+                        <span class="px-3 py-2 text-gray-500 font-bold">...</span>
+                        <button
+                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-blue-400 transition-all">48</button>
+                        <button
+                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-blue-400 hover:text-white transition-all">
+                            Next
+                            <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('scripts')
+    <script>
+        // Toggle Filter Panel with animation
+        document.getElementById('filterBtn').addEventListener('click', function() {
+            const filterPanel = document.getElementById('filterPanel');
+            filterPanel.classList.toggle('hidden');
+        });
+
+        // Clear all filters
+        document.getElementById('clearFilters').addEventListener('click', function() {
+            document.querySelectorAll('#filterPanel select').forEach(select => {
+                select.selectedIndex = 0;
+            });
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            console.log('Searching for:', searchTerm);
+            // Implement search logic here
+        });
+
+        // Export functionality
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            console.log('Exporting to Excel...');
+            // Implement Excel export here
+            alert('Export to Excel functionality will be implemented');
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + F to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+            // Ctrl/Cmd + K to toggle filters
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('filterBtn').click();
+            }
+        });
+    </script>
+@endpush
+
+@push('styles')
+    <style>
+        /* Enhanced scrollbar styling */
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
+            border-radius: 6px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #60a5fa, #3b82f6);
+            border-radius: 6px;
+            border: 2px solid #f1f5f9;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #3b82f6, #2563eb);
+        }
+
+        /* Smooth transitions */
+        table thead th,
+        table tbody td {
+            transition: all 0.2s ease;
+        }
+
+        /* Slide down animation for filter panel */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slideDown {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        /* Line clamp for long text */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Pulse animation for approved status */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+@endpush

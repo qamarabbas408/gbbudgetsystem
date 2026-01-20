@@ -39,7 +39,17 @@
             <li class="px-3 pt-2 pb-1">
                 <span class="text-xs font-semibold text-blue-300 uppercase tracking-wider">ADP Formulations</span>
             </li>
-
+            <li>
+                <a href="{{ route('adp.formulation') }}"
+                    class="group flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('adp.formulation') ? 'bg-white/10 border-l-4 border-white shadow-lg' : 'hover:bg-white/5' }}">
+                    <svg class="w-5 h-5 mr-3 {{ request()->routeIs('adp.formulation') ? 'text-white' : 'text-blue-300 group-hover:text-white' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="font-medium text-sm">ADP Formulation</span>
+                </a>
+            </li>
             {{-- Divider --}}
             <li class="pt-4 pb-2">
                 <div class="border-t border-blue-700/50"></div>

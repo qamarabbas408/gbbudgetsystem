@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SapUploadController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DepartmentMappingController;
+use App\Http\Controllers\AdpFormulationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,3 +50,11 @@ Route::post('/sap/history/{id}/activate', [SapUploadController::class, 'activate
 Route::delete('/sap/history/{id}', [SapUploadController::class, 'destroy'])->name('sap.destroy');
 
 Route::get('/reports/export/{format}', [ReportController::class, 'exportSectorDept'])->name('reports.export');
+
+Route::get('/adp/formulation', function () {
+    return view('adp.formulation');
+})->name('adp.formulation');
+Route::post('/adp/store-formulation', [AdpFormulationController::class, 'store'])->name('adp.storeFormulation');
+Route::get('/adp/upload',function () {
+     return view('adp.upload');
+});
