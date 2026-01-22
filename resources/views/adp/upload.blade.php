@@ -577,14 +577,13 @@
                 // Parse and clean approval date
                 const rawApprovalDate = row[14] ? row[14].toString() : "";
                 const cleanedApprovalDate = rawApprovalDate.replace(/,/g, '').trim();
-
+                
+              
                 // Parse financial values
                 const estimatedCost = parseFloat(row[columnMapping.estimatedCost]) || 0;
                 const expenditureToDate = parseFloat(row[columnMapping.expenditure]) || 0;
                 const allocation = parseFloat(row[columnMapping.allocation]) || 0;
-                if (adpNumber === "1851") {
-                    console.log(row);
-                }
+          
                 // Build scheme object
                 return {
                     adpNumber: adpNumber || "NEW",

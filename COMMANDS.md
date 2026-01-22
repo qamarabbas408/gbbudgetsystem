@@ -7,4 +7,5 @@ php artisan db:seed --class=MappingRulesSeeder
   php artisan make:model DepartmentMapping -m
   php artisan view:clear 
   php artisan cache:clear
-   php artisan config:clear
+   php artisan config:clearw
+   php artisan make:migration rename_adp_formulations_to_adb_dump
