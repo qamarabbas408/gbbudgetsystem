@@ -80,7 +80,18 @@
             </form>
         </div>
 
+        @php
+            $totalSchemes = $stats['total'] ?? 0;
+            $approvedSchemes = $stats['approved'] ?? 0;
+            $unapprovedSchemes = $stats['unapproved'] ?? 0;
 
+            $approvedSchemesPercentage =
+                $totalSchemes > 0 ? number_format(($approvedSchemes / $totalSchemes) * 100, 2) : 0;
+
+            $unapprovedSchemesPercentage =
+                $totalSchemes > 0 ? number_format(($unapprovedSchemes / $totalSchemes) * 100, 2) : 0;
+
+        @endphp
         {{-- Stats Row --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div
@@ -116,7 +127,7 @@
                                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            <span class="text-xs text-green-600 font-bold">66.5%</span>
+                            <span class="text-xs text-green-600 font-bold">{{ $approvedSchemesPercentage }}%</span>
                             <span class="text-xs text-gray-500">of total</span>
                         </div>
                     </div>
@@ -142,7 +153,7 @@
                                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            <span class="text-xs text-red-600 font-bold">33.5%</span>
+                            <span class="text-xs text-red-600 font-bold">{{ $unapprovedSchemesPercentage }}%</span>
                             <span class="text-xs text-gray-500">pending</span>
                         </div>
                     </div>
@@ -162,7 +173,7 @@
                     <div>
                         <p class="text-[10px] font-black text-purple-600 uppercase tracking-wider mb-1">Total Allocation
                         </p>
-                        <p class="text-4xl font-black text-purple-600 mb-1">₨45.2B</p>
+                        <p class="text-4xl font-black text-purple-600 mb-1">{{ number_format($stats['allocation']) }}</p>
                         <div class="flex items-center gap-1">
                             <svg class="w-3 h-3 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path
@@ -191,7 +202,8 @@
         <div
             class="mb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
             <div class="relative flex-1 max-w-md">
-                <input type="text" id="searchInput" placeholder="Search by scheme name, ADP#, district..."
+                <input type="text" id="searchInput" value="{{ request('search') }}"
+                    placeholder="Search by scheme name, ADP#, district..."
                     class="w-full pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
                 <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -254,7 +266,7 @@
                                 class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
                                 Appr. Date</th>
                             <th rowspan="2"
-                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">Status</th>
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">Targeted</th>
                             <th colspan="2"
                                 class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-blue-900/50">
                                 Est./Appr. Cost
@@ -335,9 +347,11 @@
                                 $totalReleasesM = $rawReleases / 1000000;
                                 $totalExpM = $rawExp / 1000000;
                                 $totalExpBeyond = $scheme->throw_forward - $reviseAllocationM;
-                                $utilization = $totalReleasesM - $totalExpM;
+                                $utilization = $totalExpM > 0 ? $totalReleasesM - $totalExpM : 0;
+                                $isTargetted = $totalExpBeyond <= 0 ? true : false;
 
                                 // $reviseAllocation = finalBudgetM
+
                             @endphp
                             <tr
                                 class="hover:bg-blue-50/70 transition-all group {{ $scheme->is_approved ? '' : 'bg-red-50/20' }}">
@@ -374,7 +388,7 @@
                                     {{ $scheme->approval_date }}
                                 </td>
                                 <td class="px-3 py-4 text-center">
-                                    @if ($scheme->is_targeted)
+                                    @if ($isTargetted)
                                         <span
                                             class="px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-black text-[9px] uppercase inline-flex items-center gap-1.5 shadow-sm">
                                             <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -398,15 +412,15 @@
                                 <td class="px-3 py-4 text-right font-mono text-gray-700">
                                     {{ number_format($scheme->throw_forward, 3) }}
                                 </td>
-                                <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">
+                                <td class="px-3 py-4 text-right font-mono text-green-600 font-bold bg-green-50/30">
                                     {{ number_format($scheme->original_allocation + $scheme->allocated_faid, 3) }}
                                 </td>
-                                <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">
+                                <td class="px-3 py-4 text-right font-mono text-green-600 font-bold bg-green-50/30">
                                     {{ number_format($scheme->allocated_faid, 3) }}
                                 </td>
 
                                 <td
-                                    class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold">
+                                    class="px-3 py-4 text-right font-mono text-purple-600 font-bold bg-purple-50/30 font-semibold">
                                     {{ number_format($reviseAllocationM, 3) }}</td>
                                 <td class="px-3 py-4 text-right font-mono text-gray-700">
                                     0
@@ -414,12 +428,12 @@
                                 <td
                                     class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold">
                                     {{ number_format($totalReleasesM, 3) }}</td>
-                                      <td
+                                <td
                                     class='px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold'>
                                     {{ number_format($totalExpM, 3) }}</td>
                                 <td
                                     class='px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold'>
-                                    {{number_format($utilization, 3)}}</td>
+                                    {{ number_format($utilization, 3) }}</td>
                                 <td
                                     class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold">
                                     {{ number_format($totalExpBeyond, 3) }}</td>
@@ -464,7 +478,49 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        let searchTimer;
+        const searchInput = document.getElementById('searchInput');
 
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value;
+
+            // 1. Clear the timer if the user is still typing
+            clearTimeout(searchTimer);
+
+            // 2. Wait 500ms after typing stops before searching
+            searchTimer = setTimeout(() => {
+                applySearch(searchTerm);
+            }, 500);
+        });
+
+        function applySearch(term) {
+            // Get current URL and parameters
+            let url = new URL(window.location.href);
+
+            // Update the 'search' parameter
+            if (term.length > 0) {
+                url.searchParams.set('search', term);
+            } else {
+                url.searchParams.delete('search');
+            }
+
+            // Reset to page 1 when searching
+            url.searchParams.set('page', 1);
+
+            // Reload the page with the new search query
+            window.location.href = url.toString();
+        }
+
+        // Allow pressing "Enter" to search immediately
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                applySearch(this.value);
+            }
+        });
+    </script>
+@endpush
 @push('scripts')
     <script>
         // Toggle Filter Panel with animation
