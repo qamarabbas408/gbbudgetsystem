@@ -269,7 +269,9 @@
                     allocation: ["ALLOCATION FOR", "ALLOC 25-26"],
                     districtCode: ["DIST CODE"],
                     sectorCode: ["SEC CODE"],
-                    halqa: ["MLA-WISE", "HALQA"]
+                    halqa: ["MLA-WISE", "HALQA"],
+                    faid: ["F.Aid"],
+                    blockAllocations : ['Block Allocation']
                 }
             };
 
@@ -337,7 +339,7 @@
                 ['dragleave', 'drop'].forEach(eventName => {
                     elements.fileDropZone.addEventListener(eventName, () => {
                         elements.fileDropZone.classList.remove('border-indigo-500',
-                        'bg-indigo-100');
+                            'bg-indigo-100');
                     });
                 });
 
@@ -479,11 +481,11 @@
 
             function validateHeaderRow(rows) {
                 const headerRow = rows[CONFIG.HEADER_ROW_INDEX];
-
+                //excel rows start from 1 index.    
                 if (!headerRow || !headerRow.some(cell => cell && cell.toString().includes("ADP"))) {
                     throw new Error(
                         `Could not find headers at row ${CONFIG.HEADER_ROW_INDEX + 1}. Please check your Excel format.`
-                        );
+                    );
                 }
             }
 
@@ -563,7 +565,7 @@
                 const schemeName = row[columnMapping.schemeName] ? row[columnMapping.schemeName].toString().trim() :
                     "";
                 const adpNumber = row[columnMapping.adpNumber] ? row[columnMapping.adpNumber].toString().trim() :
-                "";
+                    "";
 
                 // Skip invalid rows (sector headers, empty rows)
                 if (!schemeName || schemeName.length < 5 || (adpNumber === "" && row[1] === "")) {
@@ -577,13 +579,17 @@
                 // Parse and clean approval date
                 const rawApprovalDate = row[14] ? row[14].toString() : "";
                 const cleanedApprovalDate = rawApprovalDate.replace(/,/g, '').trim();
-                
-              
+
+
                 // Parse financial values
                 const estimatedCost = parseFloat(row[columnMapping.estimatedCost]) || 0;
-                const expenditureToDate = parseFloat(row[columnMapping.expenditure]) || 0;
-                const allocation = parseFloat(row[columnMapping.allocation]) || 0;
+                const expenditureToJune = parseFloat(row[columnMapping.expenditure]) || 0;
+                const allocatedAmount = parseFloat(row[columnMapping.allocation]) || 0; //original allocatated amount without faid
+                const allocatedFaid = parseFloat(row[21]) || 0;  //faid column in allocation
+                const totalAllocation = allocatedAmount + allocatedFaid;  // total amount with faid 
+                const throwforward = estimatedCost - expenditureToJune;
           
+
                 // Build scheme object
                 return {
                     adpNumber: adpNumber || "NEW",
@@ -594,11 +600,13 @@
                     halqa: row[columnMapping.halqa] || "N/A",
                     isTargeted: isTargeted ? 'Yes' : 'No',
                     estimatedCost: estimatedCost,
-                    expenditureToDate: expenditureToDate,
-                    throwForward: estimatedCost - expenditureToDate,
-                    allocation: allocation,
+                    expenditureToDate:expenditureToJune ,
+                    throwForward: throwforward,
+                    allocation: totalAllocation,
+                    allocationFaid : allocatedFaid, 
                     headCode: headCode,
-                    approvalDate: cleanedApprovalDate
+                    approvalDate: cleanedApprovalDate,
+                    allocatedAmount : allocatedAmount
                 };
             }
 
@@ -695,7 +703,8 @@
                 const financialYear = elements.financialYearSelect.value;
                 const confirmButton = elements.confirmSyncButton;
                 const originalButtonHTML = confirmButton.innerHTML;
-
+                console.log("API Data ==== ")
+                console.log(state.parsedSchemes);
                 confirmButton.disabled = true;
                 confirmButton.innerHTML = `
                     <svg class="animate-spin h-5 w-5 mr-3 text-white inline" fill="none" viewBox="0 0 24 24">
@@ -720,7 +729,7 @@
                     });
 
                     const result = await response.json();
-                    
+
                     if (response.ok) {
                         confirmButton.innerHTML = `
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

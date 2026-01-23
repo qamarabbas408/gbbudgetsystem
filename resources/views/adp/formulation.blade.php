@@ -44,7 +44,8 @@
         </div>
 
         {{-- Filter Panel (Hidden by default) --}}
-        <div id="filterPanel" class="hidden mb-6 bg-white rounded-xl border-2 border-gray-200 shadow-lg p-6 animate-slideDown">
+        <div id="filterPanel"
+            class="hidden mb-6 bg-white rounded-xl border-2 border-gray-200 shadow-lg p-6 animate-slideDown">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-bold text-gray-800">Filter Schemes</h3>
                 <button id="clearFilters" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Clear All</button>
@@ -118,7 +119,8 @@
                             <span class="text-xs text-gray-500">All projects</span>
                         </div>
                     </div>
-                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
@@ -136,13 +138,16 @@
                         <p class="text-4xl font-black text-green-600 mb-1">945</p>
                         <div class="flex items-center gap-1">
                             <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
                             </svg>
                             <span class="text-xs text-green-600 font-bold">66.5%</span>
                             <span class="text-xs text-gray-500">of total</span>
                         </div>
                     </div>
-                    <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -159,13 +164,16 @@
                         <p class="text-4xl font-black text-red-500 mb-1">476</p>
                         <div class="flex items-center gap-1">
                             <svg class="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd"></path>
                             </svg>
                             <span class="text-xs text-red-600 font-bold">33.5%</span>
                             <span class="text-xs text-gray-500">pending</span>
                         </div>
                     </div>
-                    <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -178,17 +186,23 @@
                 class="bg-gradient-to-br from-purple-50 via-white to-purple-50/50 p-6 rounded-2xl border-2 border-purple-100 shadow-md hover:shadow-xl transition-all hover:scale-105 cursor-pointer">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-[10px] font-black text-purple-600 uppercase tracking-wider mb-1">Total Allocation</p>
+                        <p class="text-[10px] font-black text-purple-600 uppercase tracking-wider mb-1">Total Allocation
+                        </p>
                         <p class="text-4xl font-black text-purple-600 mb-1">₨45.2B</p>
                         <div class="flex items-center gap-1">
                             <svg class="w-3 h-3 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
+                                <path
+                                    d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z">
+                                </path>
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
+                                    clip-rule="evenodd"></path>
                             </svg>
                             <span class="text-xs text-purple-600 font-bold">FY 2025-26</span>
                         </div>
                     </div>
-                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                 d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
@@ -200,7 +214,8 @@
         </div>
 
         {{-- Search and View Options --}}
-        <div class="mb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+        <div
+            class="mb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
             <div class="relative flex-1 max-w-md">
                 <input type="text" id="searchInput" placeholder="Search by scheme name, ADP#, district..."
                     class="w-full pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
@@ -226,7 +241,8 @@
 
         {{-- Main Table Container --}}
         <div class="bg-white rounded-2xl shadow-2xl border-2 border-gray-200 overflow-hidden">
-            <div class="overflow-x-auto overflow-y-auto max-h-[700px] scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-100">
+            <div
+                class="overflow-x-auto overflow-y-auto max-h-[700px] scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-100">
                 <table class="w-full text-left text-[11px] border-collapse min-w-[2000px]">
                     <thead class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white sticky top-0 z-20">
                         {{-- Main Header Row --}}
@@ -235,8 +251,8 @@
                                 class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 sticky left-0 bg-gray-900 z-30 w-20">
                                 <div class="flex items-center gap-2">
                                     ADP#
-                                    <svg class="w-3 h-3 text-gray-400 cursor-pointer hover:text-white transition-colors" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-gray-400 cursor-pointer hover:text-white transition-colors"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                     </svg>
@@ -246,193 +262,180 @@
                                 class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 sticky left-20 bg-gray-900 z-30 min-w-[320px]">
                                 <div class="flex items-center gap-2">
                                     Scheme Name
-                                    <svg class="w-3 h-3 text-gray-400 cursor-pointer hover:text-white transition-colors" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3 h-3 text-gray-400 cursor-pointer hover:text-white transition-colors"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                     </svg>
                                 </div>
                             </th>
-                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">Sector</th>
-                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">District</th>
-                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">MLA/Halqa</th>
-                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">Appr. Date</th>
-                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">Status</th>
-                            <th colspan="2" class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-blue-900/50">
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">Sector</th>
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">District</th>
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">MLA/Halqa
+                            </th>
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
+                                Appr. Date</th>
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">Status</th>
+                            <th colspan="2"
+                                class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-blue-900/50">
                                 Est./Appr. Cost
                             </th>
-                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
                                 Exp. Upto<br>06/2025
                             </th>
-                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center">
                                 Throw-<br>forward
                             </th>
-                            <th colspan="2" class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-green-900/50">
+                            <th colspan="2"
+                                class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-green-900/50">
                                 Allocation<br>2025-26
                             </th>
-                            <th colspan="2" class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-purple-900/50">
+                            <th colspan="2"
+                                class="px-3 py-3 font-black uppercase border-r-2 border-gray-700 text-center bg-purple-900/50">
                                 Revised<br>Allocation
                             </th>
-                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
                                 Progressive<br>Release
                             </th>
-                            <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
                                 Exp. Beyond<br>2025-26
                             </th>
                             <th rowspan="2" class="px-3 py-4 font-black uppercase text-center">Remarks</th>
                         </tr>
                         {{-- Sub Header Row --}}
                         <tr class="text-[10px]">
-                            <th class="px-2 py-2 font-bold uppercase border-r border-gray-700 text-center bg-blue-900/30">Total</th>
-                            <th class="px-2 py-2 font-bold uppercase border-r-2 border-gray-700 text-center bg-blue-900/30">F.Aid</th>
-                            <th class="px-2 py-2 font-bold uppercase border-r border-gray-700 text-center bg-green-900/30">Total</th>
-                            <th class="px-2 py-2 font-bold uppercase border-r-2 border-gray-700 text-center bg-green-900/30">F.Aid</th>
-                            <th class="px-2 py-2 font-bold uppercase border-r border-gray-700 text-center bg-purple-900/30">Total</th>
-                            <th class="px-2 py-2 font-bold uppercase border-r-2 border-gray-700 text-center bg-purple-900/30">F.Aid</th>
+                            <th class="px-2 py-2 font-bold uppercase border-r border-gray-700 text-center bg-blue-900/30">
+                                Total</th>
+                            <th
+                                class="px-2 py-2 font-bold uppercase border-r-2 border-gray-700 text-center bg-blue-900/30">
+                                F.Aid</th>
+                            <th class="px-2 py-2 font-bold uppercase border-r border-gray-700 text-center bg-green-900/30">
+                                Total</th>
+                            <th
+                                class="px-2 py-2 font-bold uppercase border-r-2 border-gray-700 text-center bg-green-900/30">
+                                F.Aid</th>
+                            <th
+                                class="px-2 py-2 font-bold uppercase border-r border-gray-700 text-center bg-purple-900/30">
+                                Total</th>
+                            <th
+                                class="px-2 py-2 font-bold uppercase border-r-2 border-gray-700 text-center bg-purple-900/30">
+                                F.Aid</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
-                        {{-- Sample Row 1: Approved Scheme --}}
-                        <tr class="hover:bg-blue-50/70 transition-all group">
-                            <td class="px-3 py-4 font-bold text-blue-700 sticky left-0 bg-white group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
-                                A001
-                            </td>
-                            <td class="px-3 py-4 font-semibold text-gray-900 sticky left-20 bg-white group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="line-clamp-2">Construction of Karakoram Highway Phase-II Extension</span>
-                                    <button class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                                        <svg class="w-4 h-4 text-blue-600 hover:text-blue-800" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="px-3 py-4 text-center">
-                                <span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-lg text-[10px] font-bold whitespace-nowrap">
-                                    Infrastructure
-                                </span>
-                            </td>
-                            <td class="px-3 py-4 text-gray-800 font-semibold text-center">Gilgit</td>
-                            <td class="px-3 py-4 text-gray-700 font-mono text-xs text-center">GBLA-1</td>
-                            <td class="px-3 py-4 text-center text-gray-700 font-mono text-xs">15-Mar-2024</td>
-                            <td class="px-3 py-4 text-center">
-                                <span class="px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-black text-[9px] uppercase inline-flex items-center gap-1.5 shadow-sm">
-                                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                                    Approved
-                                </span>
-                            </td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">250,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-blue-700 font-semibold bg-blue-50/50">50,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-700">85,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">165,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-green-700 font-bold bg-green-50/30">45,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-green-600 font-semibold bg-green-50/50">15,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-purple-700 font-bold bg-purple-50/30">50,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-purple-600 font-semibold bg-purple-50/50">20,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-teal-600 font-semibold">35,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-600">120,000,000</td>
-                            <td class="px-3 py-4 text-gray-700 text-xs">
-                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded-md font-medium">On schedule</span>
-                            </td>
-                        </tr>
+                        @forelse($schemes as $scheme)
+                            <tr
+                                class="hover:bg-blue-50/70 transition-all group {{ $scheme->is_approved ? '' : 'bg-red-50/20' }}">
+                                <td
+                                    class="px-3 py-4 font-bold text-blue-700 sticky left-0 {{ $scheme->is_approved ? 'bg-white' : 'bg-red-50/20' }} group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
+                                    {{ $scheme->adp_no }}
+                                </td>
+                                <td
+                                    class="px-3 py-4 font-semibold text-gray-900 sticky left-20 {{ $scheme->is_approved ? 'bg-white' : 'bg-red-50/20' }} group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="line-clamp-2"
+                                            title="{{ $scheme->scheme_name }}">{{ $scheme->scheme_name }}</span>
+                                        <button class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                                            <svg class="w-4 h-4 text-blue-600 hover:text-blue-800" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="px-3 py-4 text-center">
+                                    <span
+                                        class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-lg text-[10px] font-bold whitespace-nowrap">
+                                        {{ $scheme->sector_code ?? 'N/A' }}
+                                    </span>
+                                </td>
+                                <td class="px-3 py-4 text-gray-800 font-semibold text-center">
+                                    {{ $scheme->district_name ?? '-' }}</td>
+                                <td class="px-3 py-4 text-gray-700 font-mono text-xs text-center">
+                                    {{ $scheme->halqa_code ?? '-' }}</td>
+                                <td class="px-3 py-4 text-center text-gray-700 font-mono text-xs">
+                                </td>
+                                <td class="px-3 py-4 text-center">
+                                    @if ($scheme->is_targeted)
+                                        <span
+                                            class="px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-black text-[9px] uppercase inline-flex items-center gap-1.5 shadow-sm">
+                                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                                            Yes
+                                        </span>
+                                    @else
+                                        <span
+                                            class="px-2.5 py-1 bg-red-100 text-red-800 rounded-full font-black text-[9px] uppercase inline-flex items-center gap-1.5 shadow-sm">
+                                            <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                                            No
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">
+                                    {{ number_format($scheme->estimated_cost,3) }}
+                                </td>
+                                <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">0</td>
+                                <td class="px-3 py-4 text-right font-mono text-blue-700 font-semibold bg-blue-50/50">
+                                    {{ number_format($scheme->exp_upto_june ,3) }}
+                                </td>
+                                <td class="px-3 py-4 text-right font-mono text-gray-700">
+                                    {{ number_format($scheme->throw_forward ,3) }}
+                                </td>
+                                <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">
+                                    {{ number_format($scheme->original_allocation + $scheme->allocated_faid ,3) }}
+                                </td>
+                                <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">
+                                    {{ number_format( $scheme->allocated_faid ,3) }}
+                                </td>
+                                {{-- Revised Alloc (Synced from SAP) --}}
+                                <td class="px-3 py-4 text-right font-mono text-green-700 font-bold bg-green-50/30">
+                                    {{ number_format($scheme->final_budget ,3) }}
+                                </td>
 
-                        {{-- Sample Row 2: Un-Approved Scheme --}}
-                        <tr class="hover:bg-red-50/70 transition-all bg-red-50/20 group">
-                            <td class="px-3 py-4 font-bold text-gray-500 sticky left-0 bg-red-50/20 group-hover:bg-red-50/70 z-10 border-r border-gray-200">
-                                New
-                            </td>
-                            <td class="px-3 py-4 font-semibold text-gray-900 sticky left-20 bg-red-50/20 group-hover:bg-red-50/70 z-10 border-r border-gray-200">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="line-clamp-2">Establishment of IT Center in Gilgit (Proposed)</span>
-                                    <button class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                                        <svg class="w-4 h-4 text-blue-600 hover:text-blue-800" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="px-3 py-4 text-center">
-                                <span class="px-2.5 py-1 bg-purple-100 text-purple-800 rounded-lg text-[10px] font-bold whitespace-nowrap">
-                                    IT & Telecom
-                                </span>
-                            </td>
-                            <td class="px-3 py-4 text-gray-800 font-semibold text-center">Gilgit</td>
-                            <td class="px-3 py-4 text-gray-700 font-mono text-xs text-center">GBLA-2</td>
-                            <td class="px-3 py-4 text-center text-gray-400 font-mono text-xs">—</td>
-                            <td class="px-3 py-4 text-center">
-                                <span class="px-2.5 py-1 bg-red-100 text-red-800 rounded-full font-black text-[9px] uppercase inline-flex items-center gap-1.5 shadow-sm">
-                                    <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-                                    Un-Approved
-                                </span>
-                            </td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">80,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-blue-50/50">0</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-400">0</td>
-                            <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">80,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-green-50/30">0</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-green-50/50">0</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-purple-50/30">0</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-400 bg-purple-50/50">0</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-400">0</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-400">0</td>
-                            <td class="px-3 py-4 text-gray-700 text-xs">
-                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-md font-medium">Pending PDWP</span>
-                            </td>
-                        </tr>
+                                {{-- Releases (Synced from SAP) --}}
+                                <td class="px-3 py-4 text-right font-mono text-green-600 font-semibold bg-green-50/50">
+                                    {{ number_format($scheme->total_releases ,3) }}
+                                </td>
 
-                        {{-- Sample Row 3: Another Approved Scheme --}}
-                        <tr class="hover:bg-blue-50/70 transition-all group">
-                            <td class="px-3 py-4 font-bold text-blue-700 sticky left-0 bg-white group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
-                                A002
-                            </td>
-                            <td class="px-3 py-4 font-semibold text-gray-900 sticky left-20 bg-white group-hover:bg-blue-50/70 z-10 border-r border-gray-200">
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="line-clamp-2">Upgradation of District Headquarters Hospital Skardu</span>
-                                    <button class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                                        <svg class="w-4 h-4 text-blue-600 hover:text-blue-800" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="px-3 py-4 text-center">
-                                <span class="px-2.5 py-1 bg-green-100 text-green-800 rounded-lg text-[10px] font-bold">
-                                    Health
-                                </span>
-                            </td>
-                            <td class="px-3 py-4 text-gray-800 font-semibold text-center">Skardu</td>
-                            <td class="px-3 py-4 text-gray-700 font-mono text-xs text-center">GBLA-5</td>
-                            <td class="px-3 py-4 text-center text-gray-700 font-mono text-xs">22-Jan-2024</td>
-                            <td class="px-3 py-4 text-center">
-                                <span class="px-2.5 py-1 bg-green-100 text-green-800 rounded-full font-black text-[9px] uppercase inline-flex items-center gap-1.5 shadow-sm">
-                                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                                    Approved
-                                </span>
-                            </td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">120,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-blue-700 font-semibold bg-blue-50/50">30,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-700">35,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">85,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-green-700 font-bold bg-green-50/30">30,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-green-600 font-semibold bg-green-50/50">10,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-purple-700 font-bold bg-purple-50/30">32,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-purple-600 font-semibold bg-purple-50/50">12,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-teal-600 font-semibold">28,000,000</td>
-                            <td class="px-3 py-4 text-right font-mono text-gray-600">55,000,000</td>
-                            <td class="px-3 py-4 text-gray-700 text-xs">
-                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-md font-medium">Equipment pending</span>
-                            </td>
-                        </tr>
+                                {{-- Expenditure (Synced from SAP) --}}
+                                <td class="px-3 py-4 text-right font-mono text-purple-700 font-bold bg-purple-50/30">
+                                    {{ number_format($scheme->total_expenditure ,3) }}
+                                </td>
+
+                                <td class="px-3 py-4 text-right font-mono text-purple-600 font-semibold bg-purple-50/50">0
+                                </td>
+                                <td class="px-3 py-4 text-right font-mono text-teal-600 font-semibold">0</td>
+                                <td class="px-3 py-4 text-right font-mono text-gray-600">0</td>
+                                <td class="px-3 py-4 text-gray-700 text-xs">
+                                    {{ $scheme->remarks ?? '-' }}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="15" class="px-6 py-12 text-center text-gray-500 bg-gray-50">
+                                    <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                                        </path>
+                                    </svg>
+                                    <p class="text-lg font-medium">No Schemes Found</p>
+                                    <p class="text-sm">Upload ADP data or create a new scheme to get started.</p>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
+
                 </table>
             </div>
 
@@ -440,8 +443,8 @@
             <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-t-2 border-gray-200">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div class="text-sm text-gray-700 font-medium">
-                        Showing <span class="font-bold text-blue-600">1</span> to 
-                        <span class="font-bold text-blue-600">3</span> of 
+                        Showing <span class="font-bold text-blue-600">1</span> to
+                        <span class="font-bold text-blue-600">3</span> of
                         <span class="font-bold text-blue-600">1,421</span> schemes
                     </div>
                     <div class="flex gap-2">
@@ -449,7 +452,8 @@
                             class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-400 bg-white cursor-not-allowed"
                             disabled>
                             <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7"></path>
                             </svg>
                             Previous
                         </button>
@@ -465,7 +469,8 @@
                             class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-blue-400 hover:text-white transition-all">
                             Next
                             <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                                </path>
                             </svg>
                         </button>
                     </div>
@@ -555,6 +560,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -575,9 +581,12 @@
 
         /* Pulse animation for approved status */
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 1;
             }
+
             50% {
                 opacity: 0.5;
             }

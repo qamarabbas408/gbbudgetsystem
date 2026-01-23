@@ -7,6 +7,20 @@ use Illuminate\Support\Facades\DB;
 
 class AdpFormulationController extends Controller
 {
+    public function index()
+    {
+        // 1. Get the ID of the Active Snapshot
+        $activeSnapshot = \App\Models\SapUpload::getActiveSnapshot();
+        $activeId = $activeSnapshot ? $activeSnapshot->id : 0;
+
+        // 2. Fetch schemes but filter the SAP relationship to ONLY the active batch
+        $schemes = \App\Models\AdpFormulation::with(['sapDumps' => function ($query) use ($activeId) {
+            $query->where('sap_upload_id', $activeId);
+        }])->get();
+
+        return view('adp.formulation', compact('schemes', 'activeSnapshot'));
+    }
+
     public function store(Request $request)
     {
         // 1. Validation
@@ -27,13 +41,13 @@ class AdpFormulationController extends Controller
 
                 // Recalculate liability for database integrity
                 $throwForward = $estCost - $expToDate;
-                
+
                 \App\Models\AdpFormulation::updateOrCreate(
                     ['adp_no' => trim($row['adpCode'])], // Unique Bridge ID
                     [
                         'scheme_name' => trim($row['description']),
                         'approval_date' => $row['approvalDate'] ?? null,
-                        'is_targeted' => $throwForward <= 0 ? "true" : "false",
+                        'is_targeted' => $throwForward <= 0 ? 'true' : 'false',
                         'sector_code' => $row['sectorCode'] ?? null,
                         'district_name' => $row['districtCode'] ?? null, // From JS 'districtCode'
                         'halqa_code' => $row['halqa'] ?? null,
@@ -41,8 +55,9 @@ class AdpFormulationController extends Controller
                         'estimated_cost' => $estCost,
                         'exp_upto_june' => $expToDate,
                         'throw_forward' => $throwForward,
-                        'original_allocation' => (float) ($row['allocation'] ?? 0),
+                        'original_allocation' => (float) ($row['allocatedAmount'] ?? 0),
                         'financial_year' => $fy,
+                        'allocated_faid' => $row['allocationFaid'],
                         // Note: accounting columns stay at 0 until SAP sync
                     ]
                 );

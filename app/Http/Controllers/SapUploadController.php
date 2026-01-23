@@ -165,13 +165,16 @@ class SapUploadController extends Controller
             $upload->is_active = true;
             $upload->save();
 
+            // Step C: Trigger Sync to ADP Table
+            $this->syncAdpData($upload->id);
+
             DB::commit();
 
-            return back()->with('success', "Snapshot #{$id} is now the default for all reports.");
+            return back()->with('success', "Snapshot #{$id} is now active. ADP Live Financials have been synchronized.");
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Failed to activate snapshot.');
+            return back()->with('error', 'Failed to activate snapshot: ' . $e->getMessage());
         }
     }
 
@@ -186,4 +189,45 @@ class SapUploadController extends Controller
 
         return back()->with('success', 'Snapshot and all associated data deleted successfully.');
     }
+
+    /**
+     * Synchronize SAP Data to the ADP Dump table.
+     * This updates the 'Live Financials' columns in adb_dump based on the selected SAP Snapshot.
+     */
+    private function syncAdpData($uploadId)
+    {
+        // 1. Reset all live financials in ADB Dump to 0 first (safety net)
+        // This ensures that schemes NOT in the current SAP dump get zeroed out
+        DB::table('adb_dump')->update([
+            'final_budget' => 0,
+            'total_releases' => 0,
+            'total_expenditure' => 0,
+        ]);
+
+        // 2. Aggregate data from the selected SAP Snapshot
+        // We group by 'adp_no' because one ADP scheme might have multiple Cost Centers/Rows in SAP (though usually 1:1)
+        $sapData = \App\Models\SapDump::where('sap_upload_id', $uploadId)
+            ->selectRaw('
+                adp_no, 
+                SUM(final_budget) as total_budget, 
+                SUM(releases) as total_releases, 
+                SUM(expenditure) as total_expenditure
+            ')
+            ->groupBy('adp_no')
+            ->get();
+
+        // 3. Batch Update
+        // Performance Note: If datasets are huge (50k+), we might need chunking or raw SQL 'UPDATE case...'. 
+        // For ~2k schemes, simple iteration is fine.
+        foreach ($sapData as $row) {
+             DB::table('adb_dump')
+                ->where('adp_no', $row->adp_no)
+                ->update([
+                    'final_budget' => $row->total_budget,
+                    'total_releases' => $row->total_releases,
+                    'total_expenditure' => $row->total_expenditure,
+                ]);
+        }
+    }
 }
+

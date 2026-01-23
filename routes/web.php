@@ -51,9 +51,7 @@ Route::delete('/sap/history/{id}', [SapUploadController::class, 'destroy'])->nam
 
 Route::get('/reports/export/{format}', [ReportController::class, 'exportSectorDept'])->name('reports.export');
 
-Route::get('/adp/formulation', function () {
-    return view('adp.formulation');
-})->name('adp.formulation');
+Route::get('/adp/formulation', [AdpFormulationController::class, 'index'])->name('adp.formulation');
 Route::post('/adp/store-formulation', [AdpFormulationController::class, 'store'])->name('adp.storeFormulation');
 Route::get('/adp/upload',function () {
      return view('adp.upload');

@@ -14,10 +14,19 @@ class AdpFormulation extends Model
         'is_approved', 'approval_date',
         'estimated_cost', 'exp_upto_june', 'throw_forward', 'original_allocation',
         'final_budget', 'total_releases', 'total_expenditure', 'remarks',
+        'allocated_faid',
     ];
 
     protected $casts = [
         'is_approved' => 'boolean',
         // 'approval_date' => 'date',
     ];
+
+    /**
+     * Link the Planning Data (adb_dump) to the Accounting Data (sap_dumps)
+     */
+    public function sapDumps()
+    {
+        return $this->hasMany(\App\Models\SapDump::class, 'adp_no', 'adp_no');
     }
+}
