@@ -44,68 +44,42 @@
         </div>
 
         {{-- Filter Panel (Hidden by default) --}}
-        <div id="filterPanel"
-            class="hidden mb-6 bg-white rounded-xl border-2 border-gray-200 shadow-lg p-6 animate-slideDown">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-bold text-gray-800">Filter Schemes</h3>
-                <button id="clearFilters" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Clear All</button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Status</label>
-                    <select
-                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
-                        <option value="">All Statuses</option>
-                        <option value="approved">✓ Approved</option>
-                        <option value="unapproved">✗ Un-Approved</option>
-                    </select>
+        {{-- Filter Panel --}}
+        <div id="filterPanel" class="hidden mb-6 bg-white rounded-xl border-2 border-gray-200 shadow-lg p-6">
+            <form action="{{ route('adp.formulation') }}" method="GET" id="filterForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-2 uppercase">Status</label>
+                        <select name="status" class="w-full px-3 py-2.5 border rounded-lg text-sm bg-white">
+                            <option value="">All Statuses</option>
+                            <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved
+                            </option>
+                            <option value="unapproved" {{ request('status') == 'unapproved' ? 'selected' : '' }}>Un-Approved
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-2 uppercase">District</label>
+                        <select name="district" class="w-full px-3 py-2.5 border rounded-lg text-sm bg-white">
+                            <option value="">All Districts</option>
+                            @foreach ($districts as $dist)
+                                <option value="{{ $dist }}" {{ request('district') == $dist ? 'selected' : '' }}>
+                                    {{ $dist }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {{-- Repeat for Sector using $sectors loop --}}
+
+                    <div class="flex items-end gap-2">
+                        <button type="submit"
+                            class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold">Apply</button>
+                        <a href="{{ route('adp.formulation') }}"
+                            class="px-4 py-2.5 bg-gray-100 text-gray-600 rounded-lg text-sm font-bold">Reset</a>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">District</label>
-                    <select
-                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
-                        <option value="">All Districts</option>
-                        <option value="gilgit">Gilgit</option>
-                        <option value="skardu">Skardu</option>
-                        <option value="ghanche">Ghanche</option>
-                        <option value="shigar">Shigar</option>
-                        <option value="hunza">Hunza</option>
-                        <option value="nagar">Nagar</option>
-                        <option value="ghizer">Ghizer</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Sector</label>
-                    <select
-                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
-                        <option value="">All Sectors</option>
-                        <option value="infrastructure">Infrastructure</option>
-                        <option value="education">Education</option>
-                        <option value="health">Health</option>
-                        <option value="agriculture">Agriculture</option>
-                        <option value="it">IT & Telecom</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">MLA/Halqa</label>
-                    <select
-                        class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
-                        <option value="">All Halqas</option>
-                        <option value="gbla-1">GBLA-1</option>
-                        <option value="gbla-2">GBLA-2</option>
-                        <option value="gbla-3">GBLA-3</option>
-                        <option value="gbla-4">GBLA-4</option>
-                        <option value="gbla-5">GBLA-5</option>
-                    </select>
-                </div>
-                <div class="flex items-end">
-                    <button
-                        class="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors shadow-md">
-                        Apply Filters
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
+
 
         {{-- Stats Row --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -114,7 +88,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-[10px] font-black text-blue-600 uppercase tracking-wider mb-1">Total Schemes</p>
-                        <p class="text-4xl font-black text-gray-800 mb-1">1,421</p>
+                        <p class="text-4xl font-black text-gray-800 mb-1">{{ number_format($stats['total']) }}</p>
                         <div class="flex items-center gap-1">
                             <span class="text-xs text-gray-500">All projects</span>
                         </div>
@@ -135,7 +109,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-[10px] font-black text-green-600 uppercase tracking-wider mb-1">Approved</p>
-                        <p class="text-4xl font-black text-green-600 mb-1">945</p>
+                        <p class="text-4xl font-black text-green-600 mb-1">{{ number_format($stats['approved']) }}</p>
                         <div class="flex items-center gap-1">
                             <svg class="w-3 h-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -161,7 +135,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-[10px] font-black text-red-600 uppercase tracking-wider mb-1">Un-Approved</p>
-                        <p class="text-4xl font-black text-red-500 mb-1">476</p>
+                        <p class="text-4xl font-black text-red-500 mb-1">{{ number_format($stats['unapproved']) }}</p>
                         <div class="flex items-center gap-1">
                             <svg class="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -307,6 +281,14 @@
                             </th>
                             <th rowspan="2"
                                 class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
+                                Progressive<br>Expenditure
+                            </th>
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
+                                Utilization
+                            </th>
+                            <th rowspan="2"
+                                class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 text-center whitespace-nowrap">
                                 Exp. Beyond<br>2025-26
                             </th>
                             <th rowspan="2" class="px-3 py-4 font-black uppercase text-center">Remarks</th>
@@ -333,6 +315,30 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
                         @forelse($schemes as $scheme)
+                            @php
+                                // Efficient logic: if SAP sum exists (>0), use it. Else use manual column.
+                                $rawBudget =
+                                    $scheme->sap_final_budget > 0
+                                        ? $scheme->sap_final_budget
+                                        : $scheme->final_budget * 1000000;
+                                $rawReleases =
+                                    $scheme->sap_releases > 0
+                                        ? $scheme->sap_releases
+                                        : $scheme->total_releases * 1000000;
+                                $rawExp =
+                                    $scheme->sap_expenditure > 0
+                                        ? $scheme->sap_expenditure
+                                        : $scheme->total_expenditure * 1000000;
+
+                                // 2. Convert to Millions for display
+                                $reviseAllocationM = $rawBudget / 1000000; //finalbudget in sap
+                                $totalReleasesM = $rawReleases / 1000000;
+                                $totalExpM = $rawExp / 1000000;
+                                $totalExpBeyond = $scheme->throw_forward - $reviseAllocationM;
+                                $utilization = $totalReleasesM - $totalExpM;
+
+                                // $reviseAllocation = finalBudgetM
+                            @endphp
                             <tr
                                 class="hover:bg-blue-50/70 transition-all group {{ $scheme->is_approved ? '' : 'bg-red-50/20' }}">
                                 <td
@@ -365,6 +371,7 @@
                                 <td class="px-3 py-4 text-gray-700 font-mono text-xs text-center">
                                     {{ $scheme->halqa_code ?? '-' }}</td>
                                 <td class="px-3 py-4 text-center text-gray-700 font-mono text-xs">
+                                    {{ $scheme->approval_date }}
                                 </td>
                                 <td class="px-3 py-4 text-center">
                                     @if ($scheme->is_targeted)
@@ -382,40 +389,40 @@
                                     @endif
                                 </td>
                                 <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">
-                                    {{ number_format($scheme->estimated_cost,3) }}
+                                    {{ number_format($scheme->estimated_cost, 3) }}
                                 </td>
                                 <td class="px-3 py-4 text-right font-mono text-gray-900 font-bold bg-blue-50/30">0</td>
                                 <td class="px-3 py-4 text-right font-mono text-blue-700 font-semibold bg-blue-50/50">
-                                    {{ number_format($scheme->exp_upto_june ,3) }}
+                                    {{ number_format($scheme->exp_upto_june, 3) }}
                                 </td>
                                 <td class="px-3 py-4 text-right font-mono text-gray-700">
-                                    {{ number_format($scheme->throw_forward ,3) }}
+                                    {{ number_format($scheme->throw_forward, 3) }}
                                 </td>
                                 <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">
-                                    {{ number_format($scheme->original_allocation + $scheme->allocated_faid ,3) }}
+                                    {{ number_format($scheme->original_allocation + $scheme->allocated_faid, 3) }}
                                 </td>
                                 <td class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30">
-                                    {{ number_format( $scheme->allocated_faid ,3) }}
-                                </td>
-                                {{-- Revised Alloc (Synced from SAP) --}}
-                                <td class="px-3 py-4 text-right font-mono text-green-700 font-bold bg-green-50/30">
-                                    {{ number_format($scheme->final_budget ,3) }}
+                                    {{ number_format($scheme->allocated_faid, 3) }}
                                 </td>
 
-                                {{-- Releases (Synced from SAP) --}}
-                                <td class="px-3 py-4 text-right font-mono text-green-600 font-semibold bg-green-50/50">
-                                    {{ number_format($scheme->total_releases ,3) }}
+                                <td
+                                    class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold">
+                                    {{ number_format($reviseAllocationM, 3) }}</td>
+                                <td class="px-3 py-4 text-right font-mono text-gray-700">
+                                    0
                                 </td>
-
-                                {{-- Expenditure (Synced from SAP) --}}
-                                <td class="px-3 py-4 text-right font-mono text-purple-700 font-bold bg-purple-50/30">
-                                    {{ number_format($scheme->total_expenditure ,3) }}
-                                </td>
-
-                                <td class="px-3 py-4 text-right font-mono text-purple-600 font-semibold bg-purple-50/50">0
-                                </td>
-                                <td class="px-3 py-4 text-right font-mono text-teal-600 font-semibold">0</td>
-                                <td class="px-3 py-4 text-right font-mono text-gray-600">0</td>
+                                <td
+                                    class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold">
+                                    {{ number_format($totalReleasesM, 3) }}</td>
+                                      <td
+                                    class='px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold'>
+                                    {{ number_format($totalExpM, 3) }}</td>
+                                <td
+                                    class='px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold'>
+                                    {{number_format($utilization, 3)}}</td>
+                                <td
+                                    class="px-3 py-4 text-right font-mono text-orange-600 font-bold bg-orange-50/30 font-semibold">
+                                    {{ number_format($totalExpBeyond, 3) }}</td>
                                 <td class="px-3 py-4 text-gray-700 text-xs">
                                     {{ $scheme->remarks ?? '-' }}
                                 </td>
@@ -440,39 +447,17 @@
             </div>
 
             {{-- Enhanced Pagination --}}
-            <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-t-2 border-gray-200">
+            <div class="bg-gray-50 px-6 py-4 border-t-2 border-gray-200">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div class="text-sm text-gray-700 font-medium">
-                        Showing <span class="font-bold text-blue-600">1</span> to
-                        <span class="font-bold text-blue-600">3</span> of
-                        <span class="font-bold text-blue-600">1,421</span> schemes
+                        Showing <span class="font-bold text-blue-600">{{ $schemes->firstItem() }}</span> to
+                        <span class="font-bold text-blue-600">{{ $schemes->lastItem() }}</span> of
+                        <span class="font-bold text-blue-600">{{ number_format($schemes->total()) }}</span> schemes
                     </div>
-                    <div class="flex gap-2">
-                        <button
-                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-400 bg-white cursor-not-allowed"
-                            disabled>
-                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 19l-7-7 7-7"></path>
-                            </svg>
-                            Previous
-                        </button>
-                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-md">1</button>
-                        <button
-                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-blue-400 transition-all">2</button>
-                        <button
-                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-blue-400 transition-all">3</button>
-                        <span class="px-3 py-2 text-gray-500 font-bold">...</span>
-                        <button
-                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-blue-400 transition-all">48</button>
-                        <button
-                            class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-blue-400 hover:text-white transition-all">
-                            Next
-                            <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </button>
+
+                    {{-- Laravel Pagination Links --}}
+                    <div class="flex">
+                        {{ $schemes->links('pagination::tailwind') }}
                     </div>
                 </div>
             </div>

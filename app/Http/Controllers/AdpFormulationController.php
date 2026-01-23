@@ -7,19 +7,84 @@ use Illuminate\Support\Facades\DB;
 
 class AdpFormulationController extends Controller
 {
-    public function index()
-    {
-        // 1. Get the ID of the Active Snapshot
-        $activeSnapshot = \App\Models\SapUpload::getActiveSnapshot();
-        $activeId = $activeSnapshot ? $activeSnapshot->id : 0;
+    // public function index()
+    // {
+    //     // 1. Get the ID of the Active Snapshot
+    //     $activeSnapshot = \App\Models\SapUpload::getActiveSnapshot();
+    //     $activeId = $activeSnapshot ? $activeSnapshot->id : 0;
 
-        // 2. Fetch schemes but filter the SAP relationship to ONLY the active batch
-        $schemes = \App\Models\AdpFormulation::with(['sapDumps' => function ($query) use ($activeId) {
-            $query->where('sap_upload_id', $activeId);
-        }])->get();
+    //     // 2. Fetch schemes but filter the SAP relationship to ONLY the active batch
+    //     $schemes = \App\Models\AdpFormulation::with(['sapDumps' => function ($query) use ($activeId) {
+    //         $query->where('sap_upload_id', $activeId);
+    //     }])->get();
 
-        return view('adp.formulation', compact('schemes', 'activeSnapshot'));
+    //     return view('adp.formulation', compact('schemes', 'activeSnapshot'));
+    // }
+
+
+    public function index(Request $request)
+{
+    // 1. Get the Active SAP Snapshot ID
+    $activeSnapshot = \App\Models\SapUpload::getActiveSnapshot();
+    $activeId = $activeSnapshot ? $activeSnapshot->id : 0;
+
+    // 2. Start the Query
+    $query = \App\Models\AdpFormulation::query();
+
+    // 3. APPLY FILTERS
+    // Search (Scheme Name or ADP#)
+    if ($request->filled('search')) {
+        $query->where(function($q) use ($request) {
+            $q->where('scheme_name', 'like', '%' . $request->search . '%')
+              ->orWhere('adp_no', 'like', '%' . $request->search . '%');
+        });
     }
+
+    // Status Filter
+    if ($request->filled('status')) {
+        $query->where('is_approved', $request->status === 'approved' ? 1 : 0);
+    }
+
+    // District Filter
+    if ($request->filled('district')) {
+        $query->where('district_name', $request->district);
+    }
+
+    // Sector Filter
+    if ($request->filled('sector')) {
+        $query->where('sector_code', $request->sector);
+    }
+
+    // 4. EAGER AGGREGATION (High Performance)
+    // This adds virtual columns: sap_final_budget, sap_releases, sap_exp
+    $schemes = $query->withSum(['sapDumps as sap_final_budget' => function($q) use ($activeId) {
+            $q->where('sap_upload_id', $activeId);
+        }], 'final_budget')
+        ->withSum(['sapDumps as sap_releases' => function($q) use ($activeId) {
+            $q->where('sap_upload_id', $activeId);
+        }], 'releases')
+        ->withSum(['sapDumps as sap_expenditure' => function($q) use ($activeId) {
+            $q->where('sap_upload_id', $activeId);
+        }], 'expenditure')
+        ->orderBy('adp_no', 'asc')
+        ->paginate($request->get('per_page', 50)) // Dynamic pagination
+        ->withQueryString(); // Keeps your filters active when you click "Next"
+
+    // 5. Get Unique Values for Dropdowns (Optimized)
+    $districts = \App\Models\AdpFormulation::distinct()->pluck('district_name')->filter();
+    $sectors = \App\Models\AdpFormulation::distinct()->pluck('sector_code')->filter();
+
+    // 6. Calculate Stats for the top cards (on full filtered set, not just page)
+    $stats = [
+        'total' => $query->count(),
+        'approved' => (clone $query)->where('is_approved', 1)->count(),
+        'unapproved' => (clone $query)->where('is_approved', 0)->count(),
+        'allocation' => $query->sum('original_allocation'),
+    ];
+
+    return view('adp.formulation', compact('schemes', 'districts', 'sectors', 'stats', 'activeSnapshot'));
+}
+
 
     public function store(Request $request)
     {
@@ -79,4 +144,7 @@ class AdpFormulationController extends Controller
             ], 500);
         }
     }
+
+
+    
 }
