@@ -4,23 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdpFormulationController extends Controller
 {
-    // public function index()
-    // {
-    //     // 1. Get the ID of the Active Snapshot
-    //     $activeSnapshot = \App\Models\SapUpload::getActiveSnapshot();
-    //     $activeId = $activeSnapshot ? $activeSnapshot->id : 0;
-
-    //     // 2. Fetch schemes but filter the SAP relationship to ONLY the active batch
-    //     $schemes = \App\Models\AdpFormulation::with(['sapDumps' => function ($query) use ($activeId) {
-    //         $query->where('sap_upload_id', $activeId);
-    //     }])->get();
-
-    //     return view('adp.formulation', compact('schemes', 'activeSnapshot'));
-    // }
-
     public function index(Request $request)
     {
         // 1. Get the Active SAP Snapshot ID
@@ -108,13 +95,15 @@ class AdpFormulationController extends Controller
 
                 // Recalculate liability for database integrity
                 $throwForward = $estCost - $expToDate;
+                Log::info('Processing row', $row);
 
                 \App\Models\AdpFormulation::updateOrCreate(
                     ['adp_no' => trim($row['adpCode'])], // Unique Bridge ID
                     [
                         'scheme_name' => trim($row['description']),
                         'approval_date' => $row['approvalDate'] ?? null,
-                        'is_targeted' => $throwForward <= 0 ? 'true' : 'false',
+                        'is_approved' => isset($row['approvalDate']) && $row['approvalDate'] !== 'un-app',
+                        'is_targeted' => $throwForward <= 0,
                         'sector_code' => $row['sectorCode'] ?? null,
                         'district_name' => $row['districtCode'] ?? null, // From JS 'districtCode'
                         'halqa_code' => $row['halqa'] ?? null,

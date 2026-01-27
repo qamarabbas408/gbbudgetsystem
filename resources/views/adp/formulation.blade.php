@@ -243,7 +243,7 @@
 
             <div class="overflow-x-auto overflow-y-auto max-h-[700px] scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-100">
                 <table class="w-full text-left text-[11px] border-collapse min-w-[2400px]">
-                    <thead class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white sticky top-0 z-20">
+                    <thead class="bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 text-white sticky top-0 z-20">
                         {{-- Main Header Row --}}
                         <tr class="border-b-2 border-gray-700">
                             <th rowspan="2" class="px-3 py-4 font-black uppercase border-r-2 border-gray-700 sticky left-0 bg-gray-900 z-30 w-20">

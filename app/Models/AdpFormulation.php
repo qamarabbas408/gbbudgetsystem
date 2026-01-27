@@ -29,4 +29,5 @@ class AdpFormulation extends Model
     {
         return $this->hasMany(\App\Models\SapDump::class, 'adp_no', 'adp_no');
     }
+
 }
